@@ -1,0 +1,68 @@
+#background-azul {
+  background: #f26f21;
+  color: #fff;
+  height: 180px;
+}
+
+#background-flutuante {
+  margin-top: -5%;
+}
+
+.principal-row {
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
+}
+
+.login-card {
+  box-shadow: 0 4px 16px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-orange {
+  color: #fff;
+  background-color: #f26f21;
+  border-color: #f26f21;
+}
+
+.btn-orange:hover {
+  color: #fff;
+  background-color: #f26f21;
+  border-color: #f26f21;
+}
+
+.btn-delete {
+  color: #fff;
+  background-color: #c61c62;
+  border-color: #c61c62;
+}
+
+#logoutMobile {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  #background-azul {
+    height: 60px;
+  }
+
+  #logoutMobile a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 5px;
+  }
+
+  #logout {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 767px) {
+  #logoutMobile {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: 767px) {
+  #logoutMobile {
+    display: none !important;
+  }
+}
