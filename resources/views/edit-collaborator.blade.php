@@ -67,6 +67,20 @@
                    value="{{ $collaborator->phone }}">
           </div>
 
+          <div class="form-group">
+            <label for="paused">Pausado</label>
+
+            <select class="form-control" name="paused" id="paused">
+              <option value="no" selected="{{ $collaborator->paused }}">
+                No
+              </option>
+
+              <option value="yes" selected="{{ !$collaborator->paused }}">
+                Yes
+              </option>
+            </select>
+          </div>
+
           <div class="modal-footer">
             <button type="submit" class="btn btn-orange col-sm-12">Atualizar</button>
           </div>

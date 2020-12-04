@@ -23,10 +23,6 @@ class CollaboratorController extends Controller {
     $user = $request->user();
     $email = $user->email;
 
-    if(Collaborator::query()->where('nome', $name)->first() !== null) {
-      return back()->withErrors('Collaborator already exists!');
-    }
-
     $body = compact('phone', 'message', 'person_link', 'name', 'email');
 
     Collaborator::query()->create(array_merge($body, [
@@ -44,17 +40,18 @@ class CollaboratorController extends Controller {
   public function update(int $collaboratorId, Request $request) {
     $collaborator = Collaborator::query()->findOrFail($collaboratorId);
 
-
-    $collaborator->update($request->only([
+    $body = $request->only([
       'name',
       'person_link',
       'whatsapp_link',
       'message',
       'phone',
-      'email'
-    ]));
+      'email',
+    ]);
 
-    echo "CARALIHNHOS";
+    $collaborator->update(array_merge($body, [
+      'paused' => $request->input('paused') === 'yes'
+    ]));
 
     return redirect(route('dashboard'));
   }

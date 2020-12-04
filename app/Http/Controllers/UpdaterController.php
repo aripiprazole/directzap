@@ -28,12 +28,17 @@ class UpdaterController extends Controller {
     $config = Configuration::query()->where('email', $email)->firstOrFail();
     $times = $config->vezes;
 
-    /** @var Collaborator $collaborator */
-    try {
-      $collaborator = Collaborator::query()->where('email', $email)->findOrFail($user->next);
-    } catch (Throwable $throwable) {
-      $collaborator = Collaborator::query()->where('email', $email)->firstOrFail();
-      $user->filled = 0;
+    $collaborator = $this->getNextCollaborator($user->email, $user->next);
+
+    // update collaborator routine
+    if ($collaborator->counter >= $times || $collaborator->paused) {
+      $collaborator = $this->getNextCollaborator($user->email, $user->next + 1);
+
+      $user->next = $collaborator->id;
+      $collaborator->counter = 0;
+
+      $user->save();
+      $collaborator->save();
     }
 
     $user->next = $collaborator->id;
@@ -48,21 +53,21 @@ class UpdaterController extends Controller {
       'accessed_at' => now()
     ]);
 
-    $user->filled += 1;
-
-    if($user->filled >= $times) {
-      try {
-        $collaborator = Collaborator::query()->where('email', $email)->findOrFail($user->next + 1);
-      } catch (Throwable $throwable) {
-        $collaborator = Collaborator::query()->where('email', $email)->firstOrFail();
-      }
-
-      $user->next = $collaborator->id;
-      $user->filled = 0;
-    }
-
     $user->save();
 
-    return $user;
+    return view('redirect', [
+      'link' => $collaborator->link
+    ]);
+  }
+
+  private function getNextCollaborator(string $email, $id): Collaborator {
+    /** @var Collaborator $collaborator */
+    try {
+      $collaborator = Collaborator::query()->where('email', $email)->findOrFail($id);
+    } catch (Throwable $throwable) {
+      $collaborator = Collaborator::query()->where('email', $email)->firstOrFail();
+    }
+
+    return $collaborator;
   }
 }

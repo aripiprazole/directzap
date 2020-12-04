@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration {
       $table->integer('role');
       $table->string('senha', 300);
       $table->integer('next');
-      $table->integer('filled');
       $table->timestamp('tempo')->useCurrent();
     });
   }

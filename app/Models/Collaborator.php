@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class Collaborator
@@ -16,19 +15,11 @@ use Illuminate\Support\Facades\DB;
  * @property string $message
  * @property string $phone
  * @property string $email
+ * @property bool $paused
  * @property int $counter
  */
 class Collaborator extends Model {
   use HasFactory;
-
-  private const FETCH_TOTAL_COUNT_QUERY = "
-    SELECT count(estatistica_vendedores.id_vendedor) as totalCount
-    FROM colaboradores
-     LEFT JOIN estatistica_vendedores
-     ON colaboradores.id = estatistica_vendedores.id_vendedor
-    GROUP BY nome, colaboradores.id
-    ORDER BY colaboradores.id;
-  ";
 
   /**
    * The table associated with the model.
@@ -64,6 +55,7 @@ class Collaborator extends Model {
     'phone',
     'email',
     'counter',
+    'paused',
   ];
 
   /**
@@ -72,7 +64,16 @@ class Collaborator extends Model {
    * @var array
    */
   protected $attributes = [
-    'contador' => 0
+    'contador' => 0,
+  ];
+
+  /**
+   * The attributes that should be cast.
+   *
+   * @var array
+   */
+  protected $casts = [
+    'paused' => 'bool'
   ];
 
   /**
@@ -86,9 +87,9 @@ class Collaborator extends Model {
 
   // mutators
   public function getTotalCountAttribute() {
-    $result = DB::select(self::FETCH_TOTAL_COUNT_QUERY);
-
-    return optional($result[0])->totalCount;
+    return SellerStatistic::query()
+      ->where('id_vendedor', $this->id)
+      ->count();
   }
 
   public function getCounterAttribute(): int {

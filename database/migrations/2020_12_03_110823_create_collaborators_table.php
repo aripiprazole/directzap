@@ -19,6 +19,7 @@ class CreateCollaboratorsTable extends Migration {
       $table->string('mensagem', 150);
       $table->bigInteger('telefone');
       $table->integer('contador');
+      $table->boolean('paused')->default(false);
       $table->string('email', 250);
     });
   }

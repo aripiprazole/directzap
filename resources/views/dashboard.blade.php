@@ -72,12 +72,12 @@
       </div>
       <div class="row">
         <div class="col-lg-12" style="display: flex; gap: 12px">
-          @if($user->is_disabled)
-            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#colabModal" disabled>
+          @if($user->is_activated)
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#colabModal">
               Adicionar colaborador
             </button>
           @else
-            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#colabModal">
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#colabModal" disabled>
               Adicionar colaborador
             </button>
           @endif
@@ -115,7 +115,7 @@
             <tr>
               <td>{{ $collaborator->id }}</td>
               <td>{{ $collaborator->name }}</td>
-              <td>{{ $collaborator->counter }}</td>
+              <td>{{ $collaborator->total_count }}</td>
               <td>
                 <a class="btn btn-dark"
                    href="{{ route('edit-collaborator', ['collaborator' => $collaborator->id]) }}">

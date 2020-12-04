@@ -71,8 +71,6 @@ Route::middleware('auth:web')->group(function () {
     $url = config('app.fb_ads_url');
     $code = optional(Code::query()->where('email', $user->email)->first())->code;
 
-    $collaborators = Collaborator::all();
-
     return view('dashboard', [
       'user' => $request->user(),
       'code' => $code,
@@ -80,8 +78,8 @@ Route::middleware('auth:web')->group(function () {
         'name' => $user->full_name,
         'cod' => $code
       ]),
-      'link_facebook_ads' => "$url/{$user->full_name}?cod=$code",
-      'collaborators' => $collaborators
+      'link_facebook_ads' => "$url/".rawurlencode($user->full_name).'?cod='.rawurlencode($code),
+      'collaborators' => $user->collaborators()
     ]);
   })->name('dashboard');
 });

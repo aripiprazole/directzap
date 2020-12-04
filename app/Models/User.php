@@ -18,11 +18,10 @@ use Illuminate\Support\Facades\Hash;
  * @property string $password
  * @property string $email
  * @property string $status
- * @property bool $is_disabled
+ * @property bool $is_activated
  * @property int $role
  * @property Carbon $created_at
  * @property int $next
- * @property int $filled
  */
 class User extends Authenticatable {
   use HasFactory, Notifiable;
@@ -87,9 +86,12 @@ class User extends Authenticatable {
   protected $attributes = [
     'role' => 1,
     'status' => 'Desativado',
-    'next' => -1,
-    'filled' => -1
+    'next' => -1
   ];
+
+  public function collaborators() {
+    return Collaborator::query()->where('email', $this->email)->get();
+  }
 
   public function getAuthIdentifier() {
     return $this->email;
@@ -100,8 +102,8 @@ class User extends Authenticatable {
     return $this->name . ' ' . $this->surname;
   }
 
-  public function getIsDisabledAttribute(): bool {
-    return $this->status === 'Desativado';
+  public function getIsActivatedAttribute() {
+    return $this->created_at->addMonth()->greaterThanOrEqualTo(now());
   }
 
   public function getNameAttribute(): string {
@@ -120,8 +122,8 @@ class User extends Authenticatable {
     $this->attributes['Sobrenome'] = $surname;
   }
 
-  public function getCreatedAtAttribute(): Carbon {
-    return $this->attributes['tempo'];
+  public function getCreatedAtAttribute() {
+    return Carbon::createFromTimestamp(strtotime($this->attributes['tempo']));
   }
 
   public function setCreatedAtAttribute(Carbon $createdAt): void {
