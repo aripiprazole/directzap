@@ -53,6 +53,18 @@ class CollaboratorController extends Controller {
   /**
    * @param Collaborator $collaborator
    * @return RedirectResponse
+   */
+  public function pause(Collaborator $collaborator) {
+    $collaborator->update([
+      'paused' => !$collaborator->paused
+    ]);
+
+    return redirect(route('dashboard'));
+  }
+
+  /**
+   * @param Collaborator $collaborator
+   * @return RedirectResponse
    * @throws Exception
    */
   public function destroy(Collaborator $collaborator) {

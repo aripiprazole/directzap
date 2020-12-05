@@ -67,24 +67,6 @@ class Collaborator extends Model {
     'contador' => 0,
   ];
 
-  /**
-   * The attributes that should be cast.
-   *
-   * @var array
-   */
-  protected $casts = [
-    'paused' => 'bool'
-  ];
-
-  /**
-   * The attributes that should be hidden for arrays.
-   *
-   * @var array
-   */
-  protected $hidden = [
-    'id',
-  ];
-
   // mutators
   public function getTotalCountAttribute() {
     return SellerStatistic::query()
@@ -92,11 +74,15 @@ class Collaborator extends Model {
       ->count();
   }
 
-  public function getPausedAttribute(): bool {
+  public function getPausedAttribute() {
     /** @var User $user */
     $user = User::query()->where('email', $this->email)->firstOrFail();
 
-    return !$user->is_activated && $this->attributes['paused'] === 1;
+    return $user->is_activated && $this->attributes['paused'] == 1;
+  }
+
+  public function setPausedAttribute(bool $value): void {
+    $this->attributes['paused'] = $value;
   }
 
   public function getCounterAttribute(): int {
