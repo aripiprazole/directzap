@@ -1,5 +1,5 @@
 <script>
   setTimeout(() => {
-    location.href = '{{ $link }}';
+    location.href = '<?= $link ?>';
   }, 100);
 </script>

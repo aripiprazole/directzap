@@ -6,6 +6,7 @@ use App\Models\Code;
 use App\Models\Collaborator;
 use App\Models\Configuration;
 use App\Models\SellerStatistic;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Throwable;
@@ -22,7 +23,7 @@ class UpdaterController extends Controller {
     /** @var Code $code */
     $code = Code::query()->where('Codigo', $code)->first();
 
-    if($code === null) {
+    if ($code === null) {
       return 'Configuração do usuário não finalizada.';
     }
 
@@ -32,17 +33,17 @@ class UpdaterController extends Controller {
     /** @var Configuration $config */
     $config = Configuration::query()->where('email', $email)->first();
 
-    if($config === null) {
+    if ($config === null) {
       return 'Configuração do usuário não finalizada.';
     }
 
     $times = $config->vezes;
 
-    $collaborator = $this->getNextCollaborator($user->email, $user->next);
+    $collaborator = $this->getCollaborator($user->email, $user->next);
 
     // update collaborator routine
     if ($collaborator->counter >= $times || $collaborator->paused) {
-      $collaborator = $this->getNextCollaborator($user->email, $user->next + 1);
+      $collaborator = $this->getNextCollaborator($user);
 
       $user->next = $collaborator->id;
       $collaborator->counter = 0;
@@ -70,7 +71,24 @@ class UpdaterController extends Controller {
     ]);
   }
 
-  private function getNextCollaborator(string $email, $id): Collaborator {
+  private function getNextCollaborator(User $user): ?Collaborator {
+    try {
+      /** @var Collaborator $collaborator */
+      $collaborator = Collaborator::query()
+        ->where('email', $user->email)
+        ->where('paused', '!=', 1)
+        ->where('id', '>', $user->next)
+        ->firstOrFail();
+
+      return $collaborator;
+    } catch (Throwable $_) {
+      $user->next = 0;
+      $user->save();
+      return $this->getNextCollaborator($user);
+    }
+  }
+
+  private function getCollaborator(string $email, $id): Collaborator {
     /** @var Collaborator $collaborator */
     try {
       $collaborator = Collaborator::query()->where('email', $email)->findOrFail($id);
