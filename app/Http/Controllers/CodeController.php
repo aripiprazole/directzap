@@ -15,9 +15,9 @@ class CodeController extends Controller {
     $string = $request->input('code');
 
     if (strlen($string) > 5) {
-      return redirect(route('dashboard'))->withErrors(
-        'O seu código deve ter no máximo 5 caractéres.'
-      );
+      return redirect(route('dashboard'))->withErrors([
+        'errors' => 'O seu código deve ter no máximo 5 caractéres.'
+      ]);
     }
 
     if (Code::query()->where('Codigo', $string)->exists()) {
