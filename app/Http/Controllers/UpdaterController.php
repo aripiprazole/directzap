@@ -20,12 +20,22 @@ class UpdaterController extends Controller {
     $code = $request->query('cod');
 
     /** @var Code $code */
-    $code = Code::query()->where('Codigo', $code)->firstOrFail();
+    $code = Code::query()->where('Codigo', $code)->first();
+
+    if($code === null) {
+      return 'Configuração do usuário não finalizada.';
+    }
+
     $user = $code->user;
     $email = $user->email;
 
     /** @var Configuration $config */
-    $config = Configuration::query()->where('email', $email)->firstOrFail();
+    $config = Configuration::query()->where('email', $email)->first();
+
+    if($config === null) {
+      return 'Configuração do usuário não finalizada.';
+    }
+
     $times = $config->vezes;
 
     $collaborator = $this->getNextCollaborator($user->email, $user->next);

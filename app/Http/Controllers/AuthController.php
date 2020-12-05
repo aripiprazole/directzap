@@ -25,10 +25,18 @@ class AuthController extends Controller {
    * @return RedirectResponse
    */
   public function signup(Request $request) {
+    $email = $request->input('email');
+
+    if (User::query()->where('email', $email)->exists()) {
+      return back()->withErrors([
+        'errors' => 'Já existe uma conta com esse email.'
+      ]);
+    }
+
     User::query()->create([
       'name' => $request->input('name'),
       'surname' => $request->input('surname'),
-      'email' => $request->input('email'),
+      'email' => $email,
       'password' => $request->input('password'),
     ]);
 
@@ -42,11 +50,13 @@ class AuthController extends Controller {
   public function login(Request $request) {
     $credentials = $request->only('email', 'password');
 
-    if($this->guard->attempt($credentials)) {
+    if ($this->guard->attempt($credentials)) {
       return redirect()->intended(route('dashboard'));
     }
 
-    return back()->withErrors('Invalid credentials');
+    return back()->withErrors([
+      'errors' => 'Credenciais inválidas'
+    ]);
   }
 
   /**

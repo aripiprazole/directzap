@@ -22,7 +22,6 @@
 
           <a type="button"
              class="close"
-             data-dismiss="modal"
              href="{{ route('dashboard') }}"
              aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -30,10 +29,16 @@
         </div>
 
         <div class="modal-body">
+          @error('errors')
+          <div class="alert alert-danger">
+            {{ $message }}
+          </div>
+          @enderror
+
           <p>Deseja remover esse colaborador?</p>
 
           <form method="POST"
-                action="{{ route('api.collaborators.destroy', ['collaboratorId' => $collaborator->id]) }}"
+                action="{{ route('api.collaborators.destroy', ['collaborator' => $collaborator->id]) }}"
                 id="form-delete-user">
             @csrf
           </form>

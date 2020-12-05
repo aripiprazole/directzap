@@ -70,9 +70,16 @@
           </p>
         </div>
       </div>
+
+      @error('errors')
+      <div class="alert alert-danger">
+        {{ $message }}
+      </div>
+      @enderror
+
       <div class="row">
         <div class="col-lg-12" style="display: flex; gap: 12px">
-          @if($user->is_activated)
+          @if($user->can('create', App\Models\Collaborator::class))
             <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#colabModal">
               Adicionar colaborador
             </button>
@@ -105,7 +112,7 @@
             <th scope="col">ID</th>
             <th scope="col">Colaborador</th>
             <th scope="col">Conversões totais</th>
-            <th colspan="2">Opções</th>
+            <th scope="col" style="max-width: 300px">Opções</th>
           </tr>
           </thead>
 
@@ -116,17 +123,35 @@
               <td>{{ $collaborator->id }}</td>
               <td>{{ $collaborator->name }}</td>
               <td>{{ $collaborator->total_count }}</td>
-              <td>
-                <a class="btn btn-dark"
-                   href="{{ route('edit-collaborator', ['collaborator' => $collaborator->id]) }}">
-                  Editar
-                </a>
+              <td style="display: flex; max-width: 300px; justify-content: center;">
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                  <form method="POST"
+                        action="{{ route('api.collaborators.pause', ['collaborator' => $collaborator->id]) }}">
+                    @csrf
 
-                <a class="btn btn-danger"
-                   href="{{ route('delete-collaborator', ['collaborator' => $collaborator->id]) }}"
-                   data-id="{{ $collaborator->id }}">
-                  Remover
-                </a>
+                    <button
+                      type="submit"
+                      class="btn btn-orange"
+                      @unless($user->can('update', $collaborator)) disabled @endunless>
+                      @if($collaborator->paused)
+                        Despausar
+                      @else
+                        Pausar
+                      @endif
+                    </button>
+                  </form>
+
+                  <a class="btn btn-dark"
+                     href="{{ route('edit-collaborator', ['collaborator' => $collaborator->id]) }}">
+                    Editar
+                  </a>
+
+                  <a class="btn btn-danger"
+                     href="{{ route('delete-collaborator', ['collaborator' => $collaborator->id]) }}"
+                     data-id="{{ $collaborator->id }}">
+                    Remover
+                  </a>
+                </div>
               </td>
             </tr>
           @endforeach

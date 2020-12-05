@@ -92,6 +92,13 @@ class Collaborator extends Model {
       ->count();
   }
 
+  public function getPausedAttribute(): bool {
+    /** @var User $user */
+    $user = User::query()->where('email', $this->email)->firstOrFail();
+
+    return !$user->is_activated && $this->attributes['paused'] === 1;
+  }
+
   public function getCounterAttribute(): int {
     return $this->attributes['contador'];
   }

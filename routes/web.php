@@ -36,9 +36,16 @@ Route::prefix('api/v1')->name('api.')->group(function () {
     });
 
     Route::prefix('collaborators')->name('collaborators.')->group(function () {
-      Route::post('/', 'CollaboratorController@store')->name('store');
-      Route::post('{collaboratorId}/update', 'CollaboratorController@update')->name('update');
-      Route::post('{collaboratorId}/destroy', 'CollaboratorController@destroy')->name('destroy');
+      Route::middleware('can:create,App\Models\Collaborator')
+        ->post('/', 'CollaboratorController@store')->name('store');
+
+      Route::middleware('can:update,collaborator')->group(function () {
+        Route::post('{collaborator}/update', 'CollaboratorController@update')->name('update');
+        Route::post('{collaborator}/pause', 'CollaboratorController@pause')->name('pause');
+      });
+
+      Route::middleware('can:delete,collaborator')
+        ->post('{collaborator}/destroy', 'CollaboratorController@destroy')->name('destroy');
     });
   });
 });
@@ -78,7 +85,7 @@ Route::middleware('auth:web')->group(function () {
         'name' => $user->full_name,
         'cod' => $code
       ]),
-      'link_facebook_ads' => "$url/".rawurlencode($user->full_name).'?cod='.rawurlencode($code),
+      'link_facebook_ads' => "$url/" . rawurlencode($user->full_name) . '?cod=' . rawurlencode($code),
       'collaborators' => $user->collaborators()
     ]);
   })->name('dashboard');

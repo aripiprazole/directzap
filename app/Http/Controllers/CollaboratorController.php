@@ -33,36 +33,29 @@ class CollaboratorController extends Controller {
   }
 
   /**
-   * @param int $collaboratorId
+   * @param Collaborator $collaborator
    * @param Request $request
    * @return RedirectResponse
    */
-  public function update(int $collaboratorId, Request $request) {
-    $collaborator = Collaborator::query()->findOrFail($collaboratorId);
-
-    $body = $request->only([
+  public function update(Collaborator $collaborator, Request $request) {
+    $collaborator->update($request->only([
       'name',
       'person_link',
       'whatsapp_link',
       'message',
       'phone',
       'email',
-    ]);
-
-    $collaborator->update(array_merge($body, [
-      'paused' => $request->input('paused') === 'yes'
     ]));
 
     return redirect(route('dashboard'));
   }
 
   /**
-   * @param int $collaboratorId
+   * @param Collaborator $collaborator
    * @return RedirectResponse
    * @throws Exception
    */
-  public function destroy(int $collaboratorId) {
-    $collaborator = Collaborator::query()->findOrFail($collaboratorId);
+  public function destroy(Collaborator $collaborator) {
     $collaborator->delete();
 
     return redirect(route('dashboard'));

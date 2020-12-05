@@ -22,6 +22,12 @@
         <div class="card-header">Acessar o Sistema</div>
 
         <div class="card-body">
+          @error('errors')
+          <div class="alert alert-danger">
+            {{ $message }}
+          </div>
+          @enderror
+
           <form method="POST" action="{{ route('api.login') }}">
             @csrf
 

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Auth\JwtGuard;
+use App\Models\Collaborator;
+use App\Policies\CollaboratorPolicy;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Session\Session;
@@ -15,9 +17,7 @@ class AuthServiceProvider extends ServiceProvider {
    *
    * @var array
    */
-  protected $policies = [
-    // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-  ];
+  protected $policies = [Collaborator::class => CollaboratorPolicy::class];
 
   /**
    * Register any authentication / authorization services.

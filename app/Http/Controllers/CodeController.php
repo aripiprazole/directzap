@@ -12,14 +12,22 @@ class CodeController extends Controller {
    * @return RedirectResponse
    */
   public function store(Request $request) {
-    $code = $request->input('code');
+    $string = $request->input('code');
 
-    if (strlen($code) > 5) {
-      return redirect(route('dashboard'));
+    if (strlen($string) > 5) {
+      return redirect(route('dashboard'))->withErrors(
+        'O seu código deve ter no máximo 5 caractéres.'
+      );
+    }
+
+    if (Code::query()->where('Codigo', $string)->exists()) {
+      return redirect(route('dashboard'))->withErrors([
+        'errors' => 'Esse código já foi registrado.'
+      ]);
     }
 
     Code::query()->create([
-      'code' => $code,
+      'code' => $string,
       'user' => $request->user()
     ]);
 

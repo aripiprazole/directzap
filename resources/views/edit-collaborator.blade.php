@@ -22,7 +22,6 @@
 
         <a type="button"
            class="close"
-           data-dismiss="modal"
            href="{{ route('dashboard') }}"
            aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -30,8 +29,14 @@
       </div>
 
       <div class="modal-body">
+        @error('errors')
+        <div class="alert alert-danger">
+          {{ $message }}
+        </div>
+        @enderror
+
         <form method="POST"
-              action="{{ route('api.collaborators.update', ['collaboratorId' => $collaborator->id]) }}">
+              action="{{ route('api.collaborators.update', ['collaborator' => $collaborator->id]) }}">
           @csrf
 
           <div class="form-group">
@@ -65,20 +70,6 @@
                    name="phone"
                    placeholder="ex: 21911112222"
                    value="{{ $collaborator->phone }}">
-          </div>
-
-          <div class="form-group">
-            <label for="paused">Pausado</label>
-
-            <select class="form-control" name="paused" id="paused">
-              <option value="no" selected="{{ $collaborator->paused }}">
-                No
-              </option>
-
-              <option value="yes" selected="{{ !$collaborator->paused }}">
-                Yes
-              </option>
-            </select>
           </div>
 
           <div class="modal-footer">

@@ -64,7 +64,7 @@ class JwtGuard implements StatefulGuard {
    * @return bool
    */
   public function check(): bool {
-    return $this->user() !== null;
+    return !is_null($this->user());
   }
 
   /**
@@ -73,7 +73,7 @@ class JwtGuard implements StatefulGuard {
    * @return bool
    */
   public function guest(): bool {
-    return $this->user() === null;
+    return is_null($this->user());
   }
 
   /**
@@ -93,7 +93,6 @@ class JwtGuard implements StatefulGuard {
         return $this->user;
       }
     } catch (Throwable $_) {
-      throw $_;
     }
 
     return null;
@@ -147,13 +146,21 @@ class JwtGuard implements StatefulGuard {
     $email = $credentials['email'];
     $password = $credentials['password'];
 
-    /** @var User $user */
-    $user = User::query()->where('email', $email)->firstOrFail();
+    try {
+      /** @var User $user */
+      $user = User::query()->where('email', $email)->first();
 
-    if ($this->hasher->check($password, $user->password)) {
-      $this->login($user);
+      if (is_null($user)) {
+        return false;
+      }
 
-      return true;
+      if ($this->hasher->check($password, $user->password)) {
+        $this->login($user);
+
+        return true;
+      }
+    } catch (Throwable $_) {
+      return false;
     }
 
     return false;

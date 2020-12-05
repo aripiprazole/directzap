@@ -103,7 +103,7 @@ class User extends Authenticatable {
   }
 
   public function getIsActivatedAttribute() {
-    return $this->created_at->addMonth()->greaterThanOrEqualTo(now());
+    return $this->status !== 'Desativado';
   }
 
   public function getNameAttribute(): string {

@@ -19,7 +19,9 @@ class ConfigurationController extends Controller {
     $user = $request->user();
 
     if (0 > $times) {
-      return redirect(route('dashboard'))->withErrors('Times cannot be less than 0');
+      return redirect(route('dashboard'))->withErrors([
+        'errors' => 'As vezes não podem ser menores que 0.'
+      ]);
     }
 
     /** @var Configuration $configuration */
