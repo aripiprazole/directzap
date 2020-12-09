@@ -58,7 +58,7 @@ Route::get('recover', function () {
 })->name('recover');
 
 Route::get('reset', function (Request $request) {
-  return view('password-recover-reset', [
+  return view('password-reset', [
     'token' => $request->query('token'),
     'email' => $request->query('email'),
   ]);
