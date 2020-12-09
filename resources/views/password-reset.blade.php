@@ -42,6 +42,14 @@
                      placeholder="Nova senha">
             </div>
 
+            <div class="form-group">
+              <input type="password"
+                     class="form-control"
+                     id="confirm-password"
+                     name="confirm-password"
+                     placeholder="Confirmar nova senha">
+            </div>
+
             <button type="submit" class="btn btn-orange">
               Mudar senha
             </button>

@@ -149,8 +149,17 @@ class AuthController extends Controller {
    * @return RedirectResponse
    */
   public function reset(Request $request) {
+    $password = $request->input('password');
+    $confirmPassword = $request->input('confirm-password');
+
+    if($password !== $confirmPassword) {
+      return back()->withErrors([
+        'errors' => 'As senhas não batem'
+      ]);
+    }
+
     $credentials = [
-      'password' => $request->input('password'),
+      'password' => $password,
       'email' => $request->query('email'),
       'token' => $request->query('token')
     ];
