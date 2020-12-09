@@ -18,14 +18,17 @@ class AppServiceProvider extends ServiceProvider {
     $this->app->singleton(UserService::class);
 
     ResetPassword::toMailUsing(function (User $user, string $token) {
-      $count = config('auth.passwords.' . config('auth.defaults.passwords') . '.expire');
       $url = url(route('password.reset', [
         'token' => $token,
         'email' => $user->getEmailForPasswordReset(),
       ], false));
 
       return (new MailMessage)
-        ->markdown('notifications.password-reset', compact('user', 'url'));
+        ->subject('Recuperação de senha')
+        ->view('notifications.password-reset', [
+          'user' => $user,
+          'url' => $url
+        ]);
     });
   }
 

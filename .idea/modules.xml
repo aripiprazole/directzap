@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../pageslink-site/.idea/pageslink-site.iml" filepath="$PROJECT_DIR$/../pageslink-site/.idea/pageslink-site.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/site-brunovg-refactor-2.iml" filepath="$PROJECT_DIR$/.idea/site-brunovg-refactor-2.iml" />
     </modules>
   </component>
