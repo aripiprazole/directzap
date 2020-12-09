@@ -21,6 +21,9 @@ Route::prefix('api/v1')->name('api.')->group(function () {
   Route::post('signup', 'AuthController@signup')->name('signup');
   Route::post('login', 'AuthController@login')->name('login');
   Route::any('logout', 'AuthController@logout')->name('logout');
+  Route::post('recover', 'AuthController@recover')->name('recover');
+  Route::post('reset', 'AuthController@reset')->name('reset');
+  Route::post('update-password', 'AuthController@changePassword')->name('update-password');
 
   Route::middleware('auth:web')->group(function () {
     Route::prefix('pixels')->name('pixels.')->group(function () {
@@ -50,6 +53,17 @@ Route::prefix('api/v1')->name('api.')->group(function () {
   });
 });
 
+Route::get('recover', function () {
+  return view('password-recover');
+})->name('recover');
+
+Route::get('reset', function (Request $request) {
+  return view('password-recover-reset', [
+    'token' => $request->query('token'),
+    'email' => $request->query('email'),
+  ]);
+})->name('password.reset');
+
 Route::get('/', function () {
   return redirect(route('login'));
 });
@@ -70,6 +84,10 @@ Route::middleware('auth:web')->group(function () {
   Route::get('edit-modal/{collaborator}', function (Collaborator $collaborator) {
     return view('edit-collaborator', compact('collaborator'));
   })->name('edit-collaborator');
+
+  Route::get('/membros/admin/dashboard/mudar-senha', function () {
+    return view('password-change');
+  })->name('change-password');
 
   Route::get('/membros/admin/dashboard', function (Request $request) {
     /** @var User $user */

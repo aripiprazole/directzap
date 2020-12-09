@@ -98,6 +98,16 @@
           </button>
 
           <div class="d-flex align-items-end flex-column" style="margin-left: auto">
+          </div>
+
+          <div class="d-flex align-items-end" style="margin-left: auto">
+            <a href="{{ route('change-password') }}"
+               type="button"
+               class="btn btn-secondary"
+               style="margin-right: 8px">
+              Mudar senha
+            </a>
+
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">
               Config
             </button>

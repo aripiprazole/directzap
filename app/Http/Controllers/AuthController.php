@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\UserService;
+use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller {
   /**
@@ -16,8 +20,32 @@ class AuthController extends Controller {
    */
   private $guard;
 
-  public function __construct(Factory $authFactory) {
+  /**
+   * User service
+   *
+   * @var UserService
+   */
+  private $userService;
+
+  /**
+   * Router
+   *
+   * @var Router
+   */
+  private $router;
+
+  /**
+   * Password broker
+   *
+   * @var PasswordBroker
+   */
+  private $broker;
+
+  public function __construct(Factory $authFactory, UserService $userService, Router $router, PasswordBroker $broker) {
     $this->guard = $authFactory->guard();
+    $this->userService = $userService;
+    $this->router = $router;
+    $this->broker = $broker;
   }
 
   /**
@@ -33,7 +61,7 @@ class AuthController extends Controller {
       ]);
     }
 
-    User::query()->create([
+    $this->userService->create([
       'name' => $request->input('name'),
       'surname' => $request->input('surname'),
       'email' => $email,
@@ -66,5 +94,74 @@ class AuthController extends Controller {
     $this->guard->logout();
 
     return redirect(route('login'));
+  }
+
+  /**
+   * @param Request $request
+   * @return RedirectResponse
+   */
+  public function recover(Request $request) {
+    $this->broker->sendResetLink($request->only('email'));
+
+    return redirect(route('login'))->with([
+      'success' => 'Enviado com sucesso!'
+    ]);
+  }
+
+  /**
+   * @param Request $request
+   * @return RedirectResponse
+   */
+  public function changePassword(Request $request) {
+    $password = $request->input('password', 'password');
+    $passwordConfirm = $request->input('confirm-password', 'password');
+    $newPassword = $request->input('new-password', 'password');
+
+    /** @var User $user */
+    $user = $request->user();
+
+    if ($newPassword !== $passwordConfirm) {
+      return redirect(route('change-password'))->withErrors([
+        'errors' => 'A senha não bate com a de confirmação'
+      ]);
+    }
+
+    if ($user == null) {
+      return redirect(route('change-password'))->withErrors([
+        'errors' => 'Você não está logado'
+      ]);
+    }
+
+    if (!Hash::check($password, $user->password)) {
+      return redirect(route('change-password'))->withErrors([
+        'errors' => 'Senhas não batem'
+      ]);
+    }
+
+    $user->password = $newPassword;
+    $user->save();
+
+    return redirect(route('dashboard'));
+  }
+
+  /**
+   * @param Request $request
+   * @return RedirectResponse
+   */
+  public function reset(Request $request) {
+    $credentials = [
+      'password' => $request->input('password'),
+      'email' => $request->query('email'),
+      'token' => $request->query('token')
+    ];
+
+    $this->broker->reset($credentials, function (User $user, $newPassword) {
+      $user->password = $newPassword;
+      $user->save();
+    });
+
+    return redirect(route('login'))->with([
+      'success' => 'Senha resetada com sucesso!'
+    ]);
   }
 }

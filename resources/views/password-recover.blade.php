@@ -19,22 +19,16 @@
   <div class="d-flex justify-content-center">
     <div class="col-md-7">
       <div class="card login-card">
-        <div class="card-header">Acessar o Sistema</div>
+        <div class="card-header">Recuperar senha</div>
 
         <div class="card-body">
-          @if($message = session()->get('success'))
-            <div class="alert alert-danger">
-              {{ $message }}
-            </div>
-          @endif
-
           @error('errors')
           <div class="alert alert-danger">
             {{ $message }}
           </div>
           @enderror
 
-          <form method="POST" action="{{ route('api.login') }}">
+          <form method="POST" action="{{ route('api.recover') }}">
             @csrf
 
             <div class="form-group">
@@ -45,27 +39,9 @@
                      placeholder="E-mail">
             </div>
 
-            <div class="form-group">
-              <input type="password"
-                     class="form-control"
-                     id="password"
-                     name="password"
-                     placeholder="Senha">
-            </div>
-
-            <button type="submit" class="btn btn-orange">Entrar</button>
-
-            <a href="{{ route('signup') }}">
-              <button type="button" class="btn btn-orange">
-                Criar conta
-              </button>
-            </a>
-
-            <a href="{{ route('recover') }}">
-              <button type="button" class="btn btn-orange">
-                Recuperar senha
-              </button>
-            </a>
+            <button type="submit" class="btn btn-orange">
+              Recuperar senha
+            </button>
           </form>
         </div>
       </div>
