@@ -28,7 +28,10 @@
           </div>
           @enderror
 
-          <form method="POST" action="{{ route('api.reset') }}">
+          <form method="POST"
+                action="{{ route('api.reset', [
+                  'token'=> request()->query('token'), 'email'=> request()->query('email')
+                ]) }}">
             @csrf
 
             <div class="form-group">
