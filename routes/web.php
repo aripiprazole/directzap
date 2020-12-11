@@ -25,6 +25,8 @@ Route::prefix('api/v1')->name('api.')->group(function () {
   Route::post('reset', 'AuthController@reset')->name('reset');
   Route::post('update-password', 'AuthController@changePassword')->name('update-password');
 
+  Route::get('/pixels/{name}', 'PixelController@show')->name('pixels.show');
+
   Route::middleware('auth:web')->group(function () {
     Route::prefix('pixels')->name('pixels.')->group(function () {
       Route::post('/', 'PixelController@store')->name('store');
