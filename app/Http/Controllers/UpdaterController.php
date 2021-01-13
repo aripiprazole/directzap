@@ -2,100 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Code;
-use App\Models\Collaborator;
-use App\Models\Configuration;
-use App\Models\SellerStatistic;
-use App\Models\User;
+use App\Services\ConfigService;
+use App\Services\PixelService;
+use App\Services\UpdaterService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Throwable;
+use Illuminate\Http\Response;
 
 class UpdaterController extends Controller {
   /**
+   * @var ConfigService
+   */
+  private $configService;
+
+  /**
+   * @var UpdaterService
+   */
+  private $updaterService;
+
+  /**
+   * @var PixelService
+   */
+  private $pixelService;
+
+  public function __construct(
+    ConfigService $configService,
+    UpdaterService $updaterService,
+    PixelService $pixelService
+  ) {
+    $this->configService = $configService;
+    $this->updaterService = $updaterService;
+    $this->pixelService = $pixelService;
+  }
+
+  /**
    * @param string $name
    * @param Request $request
-   * @return RedirectResponse|null|string
+   * @return Application|ResponseFactory|RedirectResponse|Response
    */
   public function increase(string $name, Request $request) {
-    $code = $request->query('cod');
-
-    /** @var Code $code */
-    $code = Code::query()->where('Codigo', $code)->first();
-
+    $code = $this->configService->findCodeByCodeString($request->query('cod'));
     if ($code === null) {
-      return 'Configuração do usuário não finalizada.';
+      return response('Configuração do usuário não finalizada.');
     }
 
     $user = $code->user;
     $email = $user->email;
 
-    /** @var Configuration $config */
-    $config = Configuration::query()->where('email', $email)->first();
-
+    $config = $this->configService->findUserMaxTimesByEmail($email);
     if ($config === null) {
-      return 'Configuração do usuário não finalizada.';
+      return response('Configuração do usuário não finalizada.');
     }
 
-    $times = $config->vezes;
-
-    $collaborator = $this->getCollaborator($user->email, $user->next);
-
-    // update collaborator routine
-    if ($collaborator->counter >= $times || $collaborator->paused) {
-      $collaborator = $this->getNextCollaborator($user);
-
-      $user->next = $collaborator->id;
-      $collaborator->counter = 0;
-
-      $user->save();
-      $collaborator->save();
+    $pixel = $this->pixelService->findPixelByFullName($name);
+    if ($pixel == null) {
+      return response('Configuração do usuário não finalizada.');
     }
-
-    $user->next = $collaborator->id;
-
-    $collaborator->counter += 1;
-    $collaborator->save();
-
-    // save statistic
-    SellerStatistic::query()->create([
-      'collaborator' => $collaborator,
-      'total_counter' => $collaborator->counter,
-      'accessed_at' => now()
-    ]);
-
-    $user->save();
 
     return view('redirect', [
-      'link' => $collaborator->link
+      'link' => $this->updaterService->increaseUserCountByCode($code, $config),
+      'pixel' => $pixel
     ]);
-  }
-
-  private function getNextCollaborator(User $user): ?Collaborator {
-    try {
-      /** @var Collaborator $collaborator */
-      $collaborator = Collaborator::query()
-        ->where('email', $user->email)
-        ->where('paused', '!=', 1)
-        ->where('id', '>', $user->next)
-        ->firstOrFail();
-
-      return $collaborator;
-    } catch (Throwable $_) {
-      $user->next = 0;
-      $user->save();
-      return $this->getNextCollaborator($user);
-    }
-  }
-
-  private function getCollaborator(string $email, $id): Collaborator {
-    /** @var Collaborator $collaborator */
-    try {
-      $collaborator = Collaborator::query()->where('email', $email)->findOrFail($id);
-    } catch (Throwable $throwable) {
-      $collaborator = Collaborator::query()->where('email', $email)->firstOrFail();
-    }
-
-    return $collaborator;
   }
 }

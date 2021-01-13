@@ -12,9 +12,9 @@ class UserService {
     return $user;
   }
 
-  public function findUserByEmail(string $email): User {
-    /** @var User $user */
-    $user = User::query()->where('email', $email)->firstOrFail();
+  public function findUserByEmail(string $email): ?User {
+    /** @var User|null $user */
+    $user = User::query()->where('email', $email)->first();
 
     return $user;
   }

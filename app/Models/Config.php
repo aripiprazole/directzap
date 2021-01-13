@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $vezes
  * @property User $user
  */
-class Configuration extends Model {
+class Config extends Model {
   use HasFactory;
 
   /**

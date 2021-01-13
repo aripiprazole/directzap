@@ -4,29 +4,38 @@ namespace App\Http\Controllers;
 
 use App\Models\Collaborator;
 use App\Models\User;
+use App\Services\CollaboratorService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CollaboratorController extends Controller {
+  /** @var CollaboratorService */
+  private $collaboratorService;
+
+  public function __construct(CollaboratorService $collaboratorService) {
+    $this->collaboratorService = $collaboratorService;
+  }
+
   /**
    * @param Request $request
    * @return RedirectResponse
    */
-  public function store(Request $request) {
+  public function store(Request $request): RedirectResponse {
+    /** @var User $user */
+    $user = $request->user();
+
     $phone = $request->input('phone');
     $message = $request->input('message');
     $name = $request->input('name');
-    $person_link = '';
 
-    /** @var User $user */
-    $user = $request->user();
     $email = $user->email;
 
     $body = compact('phone', 'message', 'person_link', 'name', 'email');
 
-    Collaborator::query()->create(array_merge($body, [
-      'link' => "whatsapp://send?text=$message&phone=+55$phone"
+    $this->collaboratorService->createCollaborator(array_merge($body, [
+      'link' => "whatsapp://send?text=$message&phone=+55$phone",
+      'person_link' => ''
     ]));
 
     return redirect(route('dashboard'));
@@ -37,7 +46,7 @@ class CollaboratorController extends Controller {
    * @param Request $request
    * @return RedirectResponse
    */
-  public function update(Collaborator $collaborator, Request $request) {
+  public function update(Collaborator $collaborator, Request $request): RedirectResponse {
     $collaborator->update($request->only([
       'name',
       'person_link',
@@ -54,7 +63,7 @@ class CollaboratorController extends Controller {
    * @param Collaborator $collaborator
    * @return RedirectResponse
    */
-  public function pause(Collaborator $collaborator) {
+  public function pause(Collaborator $collaborator): RedirectResponse {
     $collaborator->update([
       'paused' => !$collaborator->paused
     ]);
@@ -67,7 +76,7 @@ class CollaboratorController extends Controller {
    * @return RedirectResponse
    * @throws Exception
    */
-  public function destroy(Collaborator $collaborator) {
+  public function destroy(Collaborator $collaborator): RedirectResponse {
     $collaborator->delete();
 
     return redirect(route('dashboard'));

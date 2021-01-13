@@ -7,64 +7,58 @@ use App\Services\UserService;
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller {
-  /**
-   * Authentication guard
-   *
-   * @var StatefulGuard
-   */
+  /** @var StatefulGuard */
   private $guard;
 
-  /**
-   * User service
-   *
-   * @var UserService
-   */
+  /** @var UserService */
   private $userService;
 
-  /**
-   * Router
-   *
-   * @var Router
-   */
+  /** @var Router */
   private $router;
 
-  /**
-   * Password broker
-   *
-   * @var PasswordBroker
-   */
+  /** @var PasswordBroker */
   private $broker;
 
-  public function __construct(Factory $authFactory, UserService $userService, Router $router, PasswordBroker $broker) {
+  /** @var Hasher */
+  private $hasher;
+
+  public function __construct(
+    Factory $authFactory,
+    UserService $userService,
+    Router $router,
+    PasswordBroker $broker,
+    Hasher $hasher
+  ) {
     $this->guard = $authFactory->guard();
     $this->userService = $userService;
     $this->router = $router;
     $this->broker = $broker;
+    $this->hasher = $hasher;
   }
 
   /**
    * @param Request $request
    * @return RedirectResponse
    */
-  public function signup(Request $request) {
+  public function signup(Request $request): RedirectResponse {
     $email = $request->input('email');
 
-    if (User::query()->where('email', $email)->exists()) {
+    if (!is_null($this->userService->findUserByEmail($email))) {
       return back()->withErrors([
         'errors' => 'Já existe uma conta com esse email.'
       ]);
     }
 
     $this->userService->create([
+      'email' => $email,
       'name' => $request->input('name'),
       'surname' => $request->input('surname'),
-      'email' => $email,
       'password' => $request->input('password'),
     ]);
 
@@ -75,7 +69,7 @@ class AuthController extends Controller {
    * @param Request $request
    * @return RedirectResponse
    */
-  public function login(Request $request) {
+  public function login(Request $request): RedirectResponse {
     $credentials = $request->only('email', 'password');
 
     if ($this->guard->attempt($credentials)) {
@@ -90,7 +84,7 @@ class AuthController extends Controller {
   /**
    * @return RedirectResponse
    */
-  public function logout() {
+  public function logout(): RedirectResponse {
     $this->guard->logout();
 
     return redirect(route('login'));
@@ -100,7 +94,7 @@ class AuthController extends Controller {
    * @param Request $request
    * @return RedirectResponse
    */
-  public function recover(Request $request) {
+  public function recover(Request $request): RedirectResponse {
     $this->broker->sendResetLink($request->only('email'));
 
     return redirect(route('login'))->with([
@@ -112,7 +106,7 @@ class AuthController extends Controller {
    * @param Request $request
    * @return RedirectResponse
    */
-  public function changePassword(Request $request) {
+  public function changePassword(Request $request): RedirectResponse {
     $password = $request->input('password', 'password');
     $passwordConfirm = $request->input('confirm-password', 'password');
     $newPassword = $request->input('new-password', 'password');
@@ -132,7 +126,7 @@ class AuthController extends Controller {
       ]);
     }
 
-    if (!Hash::check($password, $user->password)) {
+    if (!$this->hasher->check($password, $user->password)) {
       return redirect(route('change-password'))->withErrors([
         'errors' => 'Senhas não batem'
       ]);
@@ -148,11 +142,11 @@ class AuthController extends Controller {
    * @param Request $request
    * @return RedirectResponse
    */
-  public function reset(Request $request) {
+  public function reset(Request $request): RedirectResponse {
     $password = $request->input('password');
     $confirmPassword = $request->input('confirm-password');
 
-    if($password !== $confirmPassword) {
+    if ($password !== $confirmPassword) {
       return back()->withErrors([
         'errors' => 'As senhas não batem'
       ]);

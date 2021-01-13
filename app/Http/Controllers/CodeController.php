@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Code;
+use App\Services\ConfigService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CodeController extends Controller {
+  /** @var ConfigService */
+  private $configService;
+
   /**
    * @param Request $request
    * @return RedirectResponse
    */
-  public function store(Request $request) {
+  public function store(Request $request): RedirectResponse {
     $string = $request->input('code');
 
     if (strlen($string) > 5) {
@@ -20,16 +23,11 @@ class CodeController extends Controller {
       ]);
     }
 
-    if (Code::query()->where('Codigo', $string)->exists()) {
+    if (!is_null($this->configService->findCodeByCodeString($string))) {
       return redirect(route('dashboard'))->withErrors([
         'errors' => 'Esse código já foi registrado.'
       ]);
     }
-
-    Code::query()->create([
-      'code' => $string,
-      'user' => $request->user()
-    ]);
 
     return redirect(route('dashboard'));
   }
