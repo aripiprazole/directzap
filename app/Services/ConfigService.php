@@ -9,6 +9,7 @@ use App\Models\Config;
 use App\Models\User;
 
 class ConfigService {
+  public const DEFAULT_MAX_COLLABORATORS = 8;
 
   public function findCodeByCodeString($string): ?Code {
     /** @var Code $code */
@@ -17,7 +18,7 @@ class ConfigService {
     return $code;
   }
 
-  public function findUserMaxTimesByEmail($email): ?int {
+  public function findUserTimesByEmail($email): ?int {
     /** @var Config $config */
     $config = Config::query()->where('email', $email)->first();
     if ($config == null) {
@@ -27,9 +28,19 @@ class ConfigService {
     return $config->vezes;
   }
 
+  public function findMaxCollaboratorsByEmail($email): int {
+    /** @var Config $config */
+    $config = Config::query()->where('email', $email)->first();
+    if ($config == null) {
+      return self::DEFAULT_MAX_COLLABORATORS;
+    }
+
+    return $config->maxCollaborators ?: self::DEFAULT_MAX_COLLABORATORS;
+  }
+
   public function setUserCode(User $user, string $string): string {
     /** @var Code $code */
-    if(filled($code = Code::query()->where('Email', $user->email))) {
+    if (filled($code = Code::query()->where('Email', $user->email))) {
       $code->code = $string;
 
       return $code->code;
@@ -43,7 +54,7 @@ class ConfigService {
     return $code->code;
   }
 
-  public function setUserMaxTimes(User $user, int $times): int {
+  public function setUserTimes(User $user, int $times): int {
     /** @var Config $config */
     if (filled($config = Config::query()->where('email', $user->email)->first())) {
       $config->vezes = $times;

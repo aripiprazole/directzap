@@ -31,7 +31,7 @@ class ConfigurationController extends Controller {
       ]);
     }
 
-    $this->configService->setUserMaxTimes($user, $times);
+    $this->configService->setUserTimes($user, $times);
 
     return redirect(route('dashboard'));
   }

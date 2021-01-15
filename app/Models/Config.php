@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  * @property int $id
  * @property int $vezes
+ * @property int $maxCollaborators
  * @property User $user
  */
 class Config extends Model {
@@ -43,7 +44,8 @@ class Config extends Model {
    */
   protected $fillable = [
     'user',
-    'vezes'
+    'vezes',
+    'maxCollaborators'
   ];
 
   // mutators

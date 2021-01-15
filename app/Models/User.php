@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ConfigService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -89,6 +90,37 @@ class User extends Authenticatable {
     'next' => -1
   ];
 
+  public function getCollaboratorOverflowAttribute(): bool {
+    /** @var ConfigService $configService */
+    $configService = app(ConfigService::class);
+
+    /** @var Collaborator $collaborator */
+    $collaborator = Collaborator::query()
+      ->where('email', $this->email)
+      ->where('paused', '!=', 1)
+      ->where('id', '>', $this->next)
+      ->first();
+
+    if ($collaborator == null) {
+      return false;
+    }
+
+    $all = Collaborator::query()->where('email', $user->email)->get();
+
+    $index = $all->search(function (Collaborator $item) use ($collaborator) {
+      return $item->id == $collaborator->id;
+    });
+
+    return $index >= $configService->findMaxCollaboratorsByEmail($this->email);
+  }
+
+  public function getMaxCollaboratorsAttribute(): bool {
+    /** @var ConfigService $configService */
+    $configService = app(ConfigService::class);
+
+    return $configService->findMaxCollaboratorsByEmail($this->email);
+  }
+
   public function collaborators() {
     return Collaborator::query()->where('email', $this->email)->get();
   }
@@ -105,7 +137,7 @@ class User extends Authenticatable {
   public function getIsActivatedAttribute(): bool {
     /** @var Activation $activation */
     $activation = Activation::query()->where('email', $this->email)->first();
-    if($activation == null) {
+    if ($activation == null) {
       return false;
     }
     return $activation->createdAt->addDays(30)->isBefore(now());

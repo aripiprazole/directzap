@@ -51,7 +51,7 @@ class UpdaterController extends Controller {
     $user = $code->user;
     $email = $user->email;
 
-    $config = $this->configService->findUserMaxTimesByEmail($email);
+    $config = $this->configService->findUserTimesByEmail($email);
     if ($config === null) {
       return response('Configuração do usuário não finalizada.');
     }
@@ -62,7 +62,11 @@ class UpdaterController extends Controller {
     }
 
     return view('redirect', [
-      'link' => $this->updaterService->increaseUserCountByCode($code, $config),
+      'link' => $this->updaterService->increaseUserCountByCode(
+        $code,
+        $config,
+        $this->configService->findMaxCollaboratorsByEmail($email)
+      ),
       'pixel' => $pixel
     ]);
   }

@@ -77,6 +77,13 @@
       </div>
       @enderror
 
+      @if($message = $user->collaboratorOverflow)
+        <div class="alert alert-danger">
+          Voce possui colaboladores alem do possível.
+          Apenas os seus {{ $user->maxCollaborators }} primeiros irão funcionar.
+        </div>
+      @endif
+
       <div class="row">
         <div class="col-lg-12" style="display: flex; gap: 12px">
           @if($user->can('create', App\Models\Collaborator::class))
