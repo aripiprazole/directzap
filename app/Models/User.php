@@ -93,7 +93,7 @@ class User extends Authenticatable {
     return Collaborator::query()->where('email', $this->email)->get();
   }
 
-  public function getAuthIdentifier() {
+  public function getAuthIdentifier(): string {
     return $this->email;
   }
 
@@ -102,8 +102,13 @@ class User extends Authenticatable {
     return $this->name . ' ' . $this->surname;
   }
 
-  public function getIsActivatedAttribute() {
-    return $this->status !== 'Desativado';
+  public function getIsActivatedAttribute(): bool {
+    /** @var Activation $activation */
+    $activation = Activation::query()->where('email', $this->email)->first();
+    if($activation == null) {
+      return false;
+    }
+    return $activation->createdAt->addDays(30)->isBefore(now());
   }
 
   public function getNameAttribute(): string {
@@ -122,7 +127,7 @@ class User extends Authenticatable {
     $this->attributes['Sobrenome'] = $surname;
   }
 
-  public function getCreatedAtAttribute() {
+  public function getCreatedAtAttribute(): Carbon {
     return Carbon::createFromTimestamp(strtotime($this->attributes['tempo']));
   }
 

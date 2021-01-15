@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('api/v1')->name('api.')->group(function () {
+  Route::post('braip/chargeback', 'BraipController@chargeback');
+  Route::post('braip/selled', 'BraipController@selled');
+
   Route::post('signup', 'AuthController@signup')->name('signup');
   Route::post('login', 'AuthController@login')->name('login');
   Route::any('logout', 'AuthController@logout')->name('logout');

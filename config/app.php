@@ -229,6 +229,8 @@ return [
 
   ],
 
-  'fb_ads_url' => 'https://pageslink.site'
+  'fb_ads_url' => 'https://pageslink.site',
+
+  'unique_key' => env('UNIQUE_KEY')
 
 ];
