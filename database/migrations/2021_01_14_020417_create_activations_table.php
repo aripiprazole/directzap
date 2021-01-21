@@ -13,7 +13,9 @@ class CreateActivationsTable extends Migration {
   public function up() {
     Schema::create('activations', function (Blueprint $table) {
       $table->id();
-      $table->string('email');
+      $table->string('code');
+      $table->string('email')->nullable();
+      $table->boolean('is_activated');
       $table->timestamps();
     });
   }

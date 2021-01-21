@@ -11,7 +11,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon createdAt
  * @package App\Models
  */
-class Activation extends Model
-{
-    use HasFactory;
+class Activation extends Model {
+  use HasFactory;
+
+  protected $fillable = [
+    'email',
+    'code',
+    'is_activated'
+  ];
+
+  public static function code(): string {
+    return hash('sha256', now()->unix());
+  }
 }

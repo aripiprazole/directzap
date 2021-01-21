@@ -9,6 +9,6 @@ services:
     volumes:
       - ./mysql:/mysql
     environment:
-      mysql_user: root
-      mysql_root_password: password
-      mysql_database: global
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: global

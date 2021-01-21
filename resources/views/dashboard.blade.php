@@ -176,8 +176,13 @@
           </tbody>
         </table>
       </div>
+
+      @if($user->isAdministrator())
+        <div style="width: 100%">
+          @include('activator')
+        </div>
+      @endif
     </div>
-  </div>
   </div>
 </section>
 

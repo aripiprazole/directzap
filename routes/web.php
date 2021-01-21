@@ -21,6 +21,14 @@ Route::prefix('api/v1')->name('api.')->group(function () {
   Route::post('braip/chargeback', 'BraipController@chargeback');
   Route::post('braip/selled', 'BraipController@selled');
 
+  Route::middleware('auth:web')
+    ->post('activate', 'ActivationController@activate')
+    ->name('activate');
+
+  Route::middleware('auth:web')
+    ->post('activateSelf', 'ActivationController@activateSelf')
+    ->name('self.activate');
+
   Route::post('signup', 'AuthController@signup')->name('signup');
   Route::post('login', 'AuthController@login')->name('login');
   Route::any('logout', 'AuthController@logout')->name('logout');
@@ -97,6 +105,10 @@ Route::middleware('auth:web')->group(function () {
   Route::get('/membros/admin/dashboard', function (Request $request) {
     /** @var User $user */
     $user = $request->user();
+
+    if (!$user->is_activated) {
+      return view('activate', ['user' => $user]);
+    }
 
     $url = config('app.fb_ads_url');
     $code = optional(Code::query()->where('email', $user->email)->first())->code;

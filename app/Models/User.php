@@ -90,6 +90,10 @@ class User extends Authenticatable {
     'next' => -1
   ];
 
+  public function isAdministrator(): bool {
+    return $this->role >= 2;
+  }
+
   public function getCollaboratorOverflowAttribute(): bool {
     /** @var ConfigService $configService */
     $configService = app(ConfigService::class);
@@ -105,7 +109,7 @@ class User extends Authenticatable {
       return false;
     }
 
-    $all = Collaborator::query()->where('email', $user->email)->get();
+    $all = Collaborator::query()->where('email', $this->email)->get();
 
     $index = $all->search(function (Collaborator $item) use ($collaborator) {
       return $item->id == $collaborator->id;
@@ -140,7 +144,10 @@ class User extends Authenticatable {
     if ($activation == null) {
       return false;
     }
-    return $activation->createdAt->addDays(30)->isBefore(now());
+
+
+    return $activation->is_activated
+      && $activation->createdAt->addDays(30)->isBefore(now());
   }
 
   public function getNameAttribute(): string {
