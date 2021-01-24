@@ -49,8 +49,6 @@
     </div>
 
     <div class="card-body">
-      <h1 style="font-weight: 700; font-size: 20px;">Administração</h1>
-
       @error('errors')
       <div class="alert alert-danger">
         {{ $message }}

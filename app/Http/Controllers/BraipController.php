@@ -17,8 +17,10 @@ class BraipController {
   private const EMAIL = 'client_email';
   private const PRODUCT_KEY = 'product_key';
   private const PLAN_KEY = 'plan_key';
+  private const SUBS_KEY = 'subs_key';
+  private const SUBS_CODE = 'subs_code';
 
-  private $uniqueKey;
+  private $uniqueKey = '';
 
   public function __construct() {
     $this->uniqueKey = config('app.unique_key');
@@ -33,11 +35,18 @@ class BraipController {
       return response()->setStatusCode(400);
     }
 
-    Mail::to($request->input(self::EMAIL))
-      ->send(new ActivationMail(Activation::query()->create([
-        'code' => Activation::code(),
-        'is_activated' => false
-      ])));
+    if ($request->input(self::SUBS_CODE) != 'Ativa') {
+      return \response()->setStatusCode(400);
+    }
+
+    Mail::to($request->input(self::EMAIL))->send(
+      new ActivationMail(
+        Activation::query()->create([
+          'code' => $request->input(self::SUBS_KEY),
+          'is_activated' => false
+        ])
+      )
+    );
 
     return response();
   }
@@ -47,12 +56,11 @@ class BraipController {
       return response()->setStatusCode(400);
     }
 
-    $email = $request->input(self::EMAIL);
+    $code = $request->input(self::SUBS_KEY);
 
-    Activation::query()->where('email', $email)
-      ->update([
-        'is_activated' => false
-      ]);
+    Activation::query()
+      ->where('code', $code)
+      ->update(['is_activated' => false]);
 
     return response();
   }

@@ -51,6 +51,10 @@ class UpdaterController extends Controller {
     $user = $code->user;
     $email = $user->email;
 
+    if(!$user->is_activated) {
+      return response('Painel não está ativado');
+    }
+
     $config = $this->configService->findUserTimesByEmail($email);
     if ($config === null) {
       return response('Configuração do usuário não finalizada.');

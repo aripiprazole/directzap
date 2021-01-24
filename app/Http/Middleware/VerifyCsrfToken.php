@@ -11,6 +11,7 @@ class VerifyCsrfToken extends Middleware {
    * @var array
    */
   protected $except = [
-    //
+    'api/v1/braip',
+    'api/v1/braip/chargback'
   ];
 }

@@ -139,15 +139,21 @@ class User extends Authenticatable {
   }
 
   public function getIsActivatedAttribute(): bool {
+    if($this->isAdministrator()) {
+      return true;
+    }
+
     /** @var Activation $activation */
-    $activation = Activation::query()->where('email', $this->email)->first();
+    $activation = Activation::query()
+      ->where('email', $this->email)
+      ->where('is_activated',1)
+      ->whereRaw('DATE_ADD(created_at, INTERVAL 30 DAY) > NOW()')
+      ->first();
     if ($activation == null) {
       return false;
     }
 
-
-    return $activation->is_activated
-      && $activation->createdAt->addDays(30)->isBefore(now());
+    return $activation != null;
   }
 
   public function getNameAttribute(): string {

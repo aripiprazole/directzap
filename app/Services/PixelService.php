@@ -20,8 +20,8 @@ class PixelService {
     }
 
     $pixel = Pixel::query()->create([
-      'code' => $pixel,
-      'user' => $string
+      'code' => $string,
+      'user' => $user
     ]);
 
     return $pixel;
@@ -44,6 +44,6 @@ class PixelService {
       return null;
     }
 
-    return $pixel->Pixel;
+    return $pixel;
   }
 }

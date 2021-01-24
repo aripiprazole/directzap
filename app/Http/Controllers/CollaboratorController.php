@@ -28,6 +28,7 @@ class CollaboratorController extends Controller {
     $phone = $request->input('phone');
     $message = $request->input('message');
     $name = $request->input('name');
+    $person_link = '';
 
     $email = $user->email;
 

@@ -10,6 +10,10 @@ class CodeController extends Controller {
   /** @var ConfigService */
   private $configService;
 
+  public function __construct(ConfigService $configService) {
+    $this->configService = $configService;
+  }
+
   /**
    * @param Request $request
    * @return RedirectResponse
@@ -28,6 +32,8 @@ class CodeController extends Controller {
         'errors' => 'Esse código já foi registrado.'
       ]);
     }
+
+    $this->configService->setUserCode($request->user(), $string);
 
     return redirect(route('dashboard'));
   }

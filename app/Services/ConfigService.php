@@ -13,7 +13,7 @@ class ConfigService {
 
   public function findCodeByCodeString($string): ?Code {
     /** @var Code $code */
-    $code = Code::query()->where('Code', $string)->first();
+    $code = Code::query()->where('Codigo', $string)->first();
 
     return $code;
   }

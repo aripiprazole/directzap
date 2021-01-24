@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/v1')->name('api.')->group(function () {
   Route::post('braip/chargeback', 'BraipController@chargeback');
-  Route::post('braip/selled', 'BraipController@selled');
+  Route::post('braip', 'BraipController@selled');
 
   Route::middleware('auth:web')
     ->post('activate', 'ActivationController@activate')

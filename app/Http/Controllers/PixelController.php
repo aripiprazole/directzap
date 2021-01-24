@@ -10,6 +10,10 @@ class PixelController extends Controller {
   /** @var PixelService */
   private $pixelService;
 
+  public function __construct(PixelService $pixelService) {
+    $this->pixelService = $pixelService;
+  }
+
   /**
    * @param string $name
    * @return string
