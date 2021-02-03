@@ -25,10 +25,6 @@
     <div class="card-header">
       <div class="row">
         <div class="col-md-6">
-          Bem vindo, {{ $user->name }}!
-        </div>
-
-        <div class="col-md-6">
           <div class="d-flex align-items-end flex-column" id="logout">
             <a href="{{  route('api.logout')  }}">
               Sair

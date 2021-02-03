@@ -27,9 +27,7 @@
                 color: #f9f9f9;
                 display: flex;">
       <div style="height: min-content; margin: auto">
-        <h1>
-          Olá, {{ $user->name }}
-        </h1>
+        <h1>Olá, comprador</h1>
 
         <p>
           Esse email foi enviado para finalizar o seu cadastro no

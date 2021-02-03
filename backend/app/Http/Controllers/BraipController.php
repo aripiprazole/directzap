@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Mail\ActivationMail;
 use App\Models\Activation;
 use Illuminate\Contracts\Foundation\Application;
@@ -14,12 +13,8 @@ use Illuminate\Support\Facades\Mail;
 
 class BraipController {
   private const UNIQUE_KEY = 'basic_authentication';
-  private const EMAIL = 'client_email';
   private const PRODUCT_KEY = 'product_key';
   private const PLAN_KEY = 'plan_key';
-  private const SUBS_KEY = 'subs_key';
-  private const SUBS_CODE = 'subs_code';
-
   private $uniqueKey = '';
 
   public function __construct() {
@@ -32,23 +27,21 @@ class BraipController {
    */
   public function selled(Request $request) {
     if ($request->input(self::UNIQUE_KEY) != $this->uniqueKey) {
-      return response()->setStatusCode(400);
+      return response('unique key do not match');
     }
 
-    if ($request->input(self::SUBS_CODE) != 'Ativa') {
-      return \response()->setStatusCode(400);
+    if ($request->input('subs_status') != 'Ativa') {
+      return response('not activated');
     }
 
-    Mail::to($request->input(self::EMAIL))->send(
-      new ActivationMail(
-        Activation::query()->create([
-          'code' => $request->input(self::SUBS_KEY),
-          'is_activated' => false
-        ])
-      )
-    );
+    $activation = Activation::query()->create([
+      'code' => $request->input('trans_key'),
+      'is_activated' => false
+    ]);
 
-    return response();
+    Mail::to($request->input('client_email'))->send(new ActivationMail($activation));
+
+    return response()->noContent();
   }
 
   public function chargeback(Request $request) {
@@ -56,13 +49,13 @@ class BraipController {
       return response()->setStatusCode(400);
     }
 
-    $code = $request->input(self::SUBS_KEY);
+    $code = $request->input('trans_key');
 
     Activation::query()
       ->where('code', $code)
       ->update(['is_activated' => false]);
 
-    return response();
+    return response()->noContent();
   }
 
 }
