@@ -126,7 +126,8 @@ class User extends Authenticatable {
   }
 
   public function collaborators() {
-    return Collaborator::query()->where('email', $this->email)->get();
+    return Collaborator::query()->where('email', $this->email);
+
   }
 
   public function getAuthIdentifier(): string {

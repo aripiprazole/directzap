@@ -121,7 +121,7 @@ Route::middleware('auth:web')->group(function () {
         'cod' => $code
       ]),
       'link_facebook_ads' => "$url/" . rawurlencode($user->full_name) . '?cod=' . rawurlencode($code),
-      'collaborators' => $user->collaborators()
+      'collaborators' => $user->collaborators()->paginate(10)
     ]);
   })->name('dashboard');
 });
