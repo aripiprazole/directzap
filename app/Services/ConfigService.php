@@ -5,11 +5,21 @@ namespace App\Services;
 
 
 use App\Models\Code;
+use App\Models\Collaborator;
 use App\Models\Config;
 use App\Models\User;
 
 class ConfigService {
   public const DEFAULT_MAX_COLLABORATORS = 8;
+
+  public function hasOverloadedCollaborators($email): bool {
+    $maxCollaborators = $this->findMaxCollaboratorsByEmail($email);
+    $collaborator = Collaborator::query()
+      ->where('email', $email)
+      ->get();
+
+    return $collaborator->count() >= $maxCollaborators;
+  }
 
   public function findCodeByCodeString($string): ?Code {
     /** @var Code $code */

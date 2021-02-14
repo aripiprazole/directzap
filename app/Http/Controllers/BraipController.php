@@ -30,8 +30,8 @@ class BraipController {
       return response('unique key do not match');
     }
 
-    if ($request->input('subs_status') != 'Ativa') {
-      return response('not activated');
+    if($request->input('trans_status_code') !== 2) {
+      return \response('your code is not approved');
     }
 
     $activation = Activation::query()->create([

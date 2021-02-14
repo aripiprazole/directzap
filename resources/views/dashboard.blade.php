@@ -10,7 +10,7 @@
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
         crossorigin="anonymous">
   <link rel="stylesheet" href="{{ asset('app.css') }}">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+{{--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">--}}
 </head>
 
 <body>
@@ -74,7 +74,7 @@
 
       @error('errors')
       <div class="alert alert-danger">
-        {{ $message }}
+        <?= $message ?>
       </div>
       @enderror
 
@@ -137,11 +137,11 @@
           <tbody>
 
           @foreach($collaborators as $collaborator)
-            <tr>
+            <tr style="width:100%">
               <td>{{ $collaborator->id }}</td>
               <td>{{ $collaborator->name }}</td>
               <td>{{ $collaborator->total_count }}</td>
-              <td style="display: flex; max-width: 300px; justify-content: center;">
+              <td style="display: flex; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; width: 100%;">
                   <form method="POST"
                         action="{{ route('api.collaborators.pause', ['collaborator' => $collaborator->id]) }}">
@@ -151,6 +151,7 @@
                       type="submit"
                       class="btn btn-orange"
                       @unless($user->can('update', $collaborator)) disabled @endunless>
+
                       @if($collaborator->paused)
                         Despausar
                       @else
@@ -364,6 +365,18 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6028aaec9c4f165d47c311fc/1eufdnb4p';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
+</script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js">
 </script>

@@ -78,7 +78,7 @@ class Collaborator extends Model {
     /** @var User $user */
     $user = User::query()->where('email', $this->email)->firstOrFail();
 
-    return !$user->is_activated && $this->attributes['paused'] == 1;
+    return $user->is_activated && $this->attributes['paused'] == 1;
   }
 
   public function setPausedAttribute(bool $value): void {
