@@ -14,11 +14,12 @@ class ConfigService {
 
   public function hasOverloadedCollaborators($email): bool {
     $maxCollaborators = $this->findMaxCollaboratorsByEmail($email);
+
     $collaborator = Collaborator::query()
       ->where('email', $email)
       ->get();
 
-    return $collaborator->count() >= $maxCollaborators;
+    return $collaborator->count() > $maxCollaborators;
   }
 
   public function findCodeByCodeString($string): ?Code {
@@ -41,6 +42,7 @@ class ConfigService {
   public function findMaxCollaboratorsByEmail($email): int {
     /** @var Config $config */
     $config = Config::query()->where('email', $email)->first();
+
     if ($config == null) {
       return self::DEFAULT_MAX_COLLABORATORS;
     }

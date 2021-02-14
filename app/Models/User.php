@@ -101,7 +101,7 @@ class User extends Authenticatable {
     return $configService->hasOverloadedCollaborators($this->email);
   }
 
-  public function getMaxCollaboratorsAttribute(): bool {
+  public function getMaxCollaboratorsAttribute(): int {
     /** @var ConfigService $configService */
     $configService = app(ConfigService::class);
 

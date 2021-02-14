@@ -140,7 +140,7 @@
             <tr style="width:100%">
               <td>{{ $collaborator->id }}</td>
               <td>{{ $collaborator->name }}</td>
-              <td>{{ $collaborator->contador }}</td>
+              <td>{{ $collaborator->total_count }}</td>
               <td style="display: flex; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; width: 100%;">
                   <form method="POST"
