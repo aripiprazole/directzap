@@ -16,6 +16,8 @@ class CreateActivationsTable extends Migration {
       $table->string('code');
       $table->string('email')->nullable();
       $table->boolean('is_activated');
+      $table->boolean('automatic')->default(false);
+      $table->boolean('expired')->default(false);
       $table->timestamps();
     });
   }

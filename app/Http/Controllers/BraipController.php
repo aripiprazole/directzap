@@ -31,15 +31,30 @@ class BraipController {
     }
 
     if($request->input('trans_status_code') !== 2) {
-      return \response('your code is not approved');
+      return $this->cancel($request);
     }
 
     $activation = Activation::query()->create([
       'code' => $request->input('trans_key'),
+      'automatic' => true,
       'is_activated' => false
     ]);
 
     Mail::to($request->input('client_email'))->send(new ActivationMail($activation));
+
+    return response()->noContent();
+  }
+
+  public function cancel(Request $request) {
+    if ($request->input(self::UNIQUE_KEY) != $this->uniqueKey) {
+      return response()->setStatusCode(400);
+    }
+
+    $code = $request->input('trans_key');
+
+    Activation::query()
+      ->where('code', $code)
+      ->update(['is_activated' => false, 'expired' => true]);
 
     return response()->noContent();
   }
@@ -53,7 +68,7 @@ class BraipController {
 
     Activation::query()
       ->where('code', $code)
-      ->update(['is_activated' => false]);
+      ->update(['is_activated' => false, 'expired' => true]);
 
     return response()->noContent();
   }

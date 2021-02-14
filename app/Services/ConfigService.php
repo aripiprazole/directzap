@@ -50,8 +50,9 @@ class ConfigService {
 
   public function setUserCode(User $user, string $string): string {
     /** @var Code $code */
-    if (filled($code = Code::query()->where('Email', $user->email))) {
+    if (filled($code = Code::query()->where('Email', $user->email)->first())) {
       $code->code = $string;
+      $code->save();
 
       return $code->code;
     }

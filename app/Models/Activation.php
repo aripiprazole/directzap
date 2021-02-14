@@ -17,7 +17,9 @@ class Activation extends Model {
   protected $fillable = [
     'email',
     'code',
-    'is_activated'
+    'is_activated',
+    'automatic',
+    'expired'
   ];
 
   public static function code(): string {

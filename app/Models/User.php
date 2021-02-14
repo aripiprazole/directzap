@@ -98,24 +98,7 @@ class User extends Authenticatable {
     /** @var ConfigService $configService */
     $configService = app(ConfigService::class);
 
-    /** @var Collaborator $collaborator */
-    $collaborator = Collaborator::query()
-      ->where('email', $this->email)
-      ->where('paused', '!=', 1)
-      ->where('id', '>', $this->next)
-      ->first();
-
-    if ($collaborator == null) {
-      return false;
-    }
-
-    $all = Collaborator::query()->where('email', $this->email)->get();
-
-    $index = $all->search(function (Collaborator $item) use ($collaborator) {
-      return $item->id == $collaborator->id;
-    });
-
-    return $index >= $configService->findMaxCollaboratorsByEmail($this->email);
+    return $configService->hasOverloadedCollaborators($this->email);
   }
 
   public function getMaxCollaboratorsAttribute(): bool {
@@ -148,7 +131,7 @@ class User extends Authenticatable {
     $activation = Activation::query()
       ->where('email', $this->email)
       ->where('is_activated',1)
-      ->whereRaw('DATE_ADD(created_at, INTERVAL 30 DAY) > NOW()')
+      ->whereRaw('(DATE_ADD(created_at, INTERVAL 30 DAY) > NOW() and automatic = 0) or (expired = 0 and automatic = 1)')
       ->first();
     if ($activation == null) {
       return false;

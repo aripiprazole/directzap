@@ -39,11 +39,6 @@ class PixelService {
       return null;
     }
 
-    $pixel = Pixel::query()->where('Email', $user->email)->firstOrFail();
-    if ($pixel == null) {
-      return null;
-    }
-
-    return $pixel;
+    return Pixel::query()->where('Email', $user->email)->first();
   }
 }
