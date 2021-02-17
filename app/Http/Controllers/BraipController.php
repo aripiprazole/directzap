@@ -9,7 +9,9 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+
 
 class BraipController {
   private const UNIQUE_KEY = 'basic_authentication';
@@ -26,11 +28,13 @@ class BraipController {
    * @return Application|ResponseFactory|Response|object
    */
   public function selled(Request $request) {
+    Log::info('CREATING ACTIVATION AUTOMATICALLY ' . json_encode($request->all()));
+
     if ($request->input(self::UNIQUE_KEY) != $this->uniqueKey) {
       return response('unique key do not match');
     }
 
-    if($request->input('trans_status_code') !== 2) {
+    if($request->input('subs_status_code') !== 2) {
       return $this->cancel($request);
     }
 
