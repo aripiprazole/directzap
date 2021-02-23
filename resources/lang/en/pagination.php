@@ -13,8 +13,7 @@ return [
   |
   */
 
-  'Pagination Navigation' => 'Paginas:',
-  'previous' => '&laquo; Prox.',
-  'next' => 'Prev. &raquo;',
+  'previous' => '&laquo; Previous',
+  'next' => 'Next &raquo;',
 
 ];
