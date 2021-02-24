@@ -24,6 +24,11 @@ Route::middleware('auth:web')->prefix('/dashboard')->name('dashboard.')->group(f
     Route::post('/update/me', 'Dashboard\MeController@update')->name('update.me');
   });
 
+  Route::prefix('/configurations')->name('configurations.')->group(function () {
+    Route::post('/update/me', 'Dashboard\MeConfigurationController@update')->name('update.me');
+    Route::post('/refresh/me', 'Dashboard\MeConfigurationController@refresh')->name('refresh.me');
+  });
+
   Route::prefix('/collaborators')->name('collaborators.')->group(function () {
     Route::get('/', 'Dashboard\CollaboratorController@index')->name('index');
     Route::get('/create', 'Dashboard\CollaboratorController@create')->name('create');
@@ -45,7 +50,7 @@ Route::middleware('auth:web')->prefix('/dashboard')->name('dashboard.')->group(f
   });
 });
 
-Route::get('/{name?}', 'ConversionController');
+Route::get('/{name?}', 'ConversionController')->name('conversion');
 
 // locale Route
 Route::get('lang/{locale}', [LanguageController::class, 'swap']);

@@ -19,7 +19,11 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string email
  * @property string password
  * @property int status
+ * @property int next
+ * @property int totalCount
+ * @property int fillCount
  * @property bool active
+ * @property Configuration configuration
  */
 class User extends Authenticatable {
   use HasApiTokens, Notifiable, HasRoles;
@@ -71,5 +75,13 @@ class User extends Authenticatable {
 
   public function getActiveAttribute(): bool {
     return true;
+  }
+
+  public function hasCollaborators(): bool {
+    return $this->collaborators()->exists();
+  }
+
+  public function overflow(): bool {
+    return $this->collaborators()->count() > $this->configuration->max_collaborators;
   }
 }

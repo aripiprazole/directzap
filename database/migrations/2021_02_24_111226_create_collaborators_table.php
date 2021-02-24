@@ -17,7 +17,8 @@ class CreateCollaboratorsTable extends Migration {
       $table->string('phone');
       $table->string('email');
       $table->string('message');
-      $table->integer('count');
+      $table->integer('total_count');
+      $table->integer('fill_count');
       $table->integer('status');
       $table->timestamps();
 

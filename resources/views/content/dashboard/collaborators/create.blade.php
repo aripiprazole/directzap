@@ -8,6 +8,15 @@
     <div class="card-header">
       <h4 class="card-title">Adcionar novo colaborador</h4>
     </div>
+
+    @if(!$user->active)
+      <div class="alert alert-danger" role="alert">
+        <div class="alert-body">
+          <strong>Você não está ativado, então não poderá criar colaboradores.</strong>
+        </div>
+      </div>
+    @endif
+
     <div class="card-body">
       <form method="POST" action="{{ route('dashboard.collaborators.store') }}">
         @csrf
@@ -29,10 +38,12 @@
 
         <div class="form-group">
           <label for="message">Mensagem</label>
-          <input required name="message" type="text" class="form-control" id="message" placeholder="Olá Jhon, vi seu anúncio...">
+          <input required name="message" type="text" class="form-control" id="message"
+                 placeholder="Olá Jhon, vi seu anúncio...">
         </div>
 
-        <button type="submit" class="btn btn-primary">
+        <button @if($user->cannot('create', App\Collaborator::class)) disabled @endif type="submit"
+                class="btn btn-primary">
           Criar colaborador
         </button>
       </form>

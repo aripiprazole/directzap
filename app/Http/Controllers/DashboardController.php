@@ -10,7 +10,7 @@ class DashboardController extends Controller {
       ['link' => "dashboard", 'name' => __('pages.Dashboard')], ['name' => __('pages.Settings')]
     ];
 
-    return view('content.settings', [
+    return view('content.dashboard.settings', [
       'breadcrumbs' => $breadcrumbs,
       'user' => $request->user()
     ]);

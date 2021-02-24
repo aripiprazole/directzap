@@ -37,8 +37,8 @@ class CollaboratorController extends Controller {
 
   public function edit(Request $request, Collaborator $collaborator) {
     $breadcrumbs = [
-      ['link' => "dashboard", 'name' => __('Dashboard')],
-      ['link' => "dashboard/collaborators", 'name' => __('Collaborators')],
+      ['link' => "dashboard", 'name' => __('pages.Dashboard')],
+      ['link' => "dashboard/collaborators", 'name' => __('pages.Collaborators')],
       ['name' => __('pages.Edit collaborator', ['name' => $collaborator->name])]
     ];
 
@@ -59,7 +59,8 @@ class CollaboratorController extends Controller {
       'message' => $request->input('message'),
       'email' => $request->input('email'),
       'status' => Collaborator::ACTIVE,
-      'count' => 0
+      'total_count' => 0,
+      'fill_count' => 0,
     ]);
 
     return redirect(route('dashboard.collaborators.index'))
@@ -68,8 +69,8 @@ class CollaboratorController extends Controller {
 
   public function create(Request $request) {
     $breadcrumbs = [
-      ['link' => "dashboard", 'name' => __('Dashboard')],
-      ['link' => "dashboard/collaborators", 'name' => __('Collaborators')],
+      ['link' => "dashboard", 'name' => __('pages.Dashboard')],
+      ['link' => "dashboard/collaborators", 'name' => __('pages.Collaborators')],
       ['name' => __('Add collaborator')]
     ];
 
@@ -88,7 +89,7 @@ class CollaboratorController extends Controller {
   }
 
   public function clear(Collaborator $collaborator): RedirectResponse {
-    $collaborator->count = 0;
+    $collaborator->total_count = 0;
     $collaborator->save();
 
     return back()

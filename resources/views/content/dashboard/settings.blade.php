@@ -1,4 +1,4 @@
-@extends('layouts/contentLayoutMaster')
+@extends('layouts.contentLayoutMaster')
 
 @section('title', 'Configurações')
 
@@ -70,7 +70,7 @@
           <div class="card-body">
             <div class="tab-content">
               <!-- general tab -->
-              @if($message = session()->get('message'))
+              @if(!is_null($message = session()->get('message')))
                 <div class="alert alert-primary" role="alert">
                   <div class="alert-body">
                     {{ $message }}
@@ -160,6 +160,7 @@
 
                     <div class="col-12">
                       <button type="submit" form="account-form" class="btn btn-primary mt-2 mr-1">
+                        <i data-feather="save"></i>
                         Salvar alterações
                       </button>
                     </div>
@@ -238,14 +239,16 @@
                       </div>
                     </div>
                     <div class="col-12">
-                      <button type="submit" class="btn btn-primary mr-1 mt-1">Salvar alterações</button>
+                      <button type="submit" class="btn btn-primary mr-1 mt-1">
+                        <i data-feather="save"></i>
+                        Salvar alterações
+                      </button>
                     </div>
                   </div>
                 </form>
                 <!--/ form -->
               </div>
               <!--/ change password -->
-
 
               <!-- information -->
               <div
@@ -255,8 +258,13 @@
                 aria-labelledby="account-pill-info"
                 aria-expanded="false"
               >
+                <form id="account-refresh-form" method="POST"
+                      action="{{ route('dashboard.configurations.refresh.me')  }}">
+                  @csrf
+                </form>
+
                 <!-- form -->
-                <form class="validate-form">
+                <form class="validate-form" method="POST" action="{{ route('dashboard.configurations.update.me') }}">
                   <div class="row">
                     <div class="col-12 col-sm-6">
                       <div class="form-group">
@@ -268,7 +276,21 @@
                           name="conv-per-user"
                           id="account-conv-per-user"
                           placeholder="Conversões por usuário"
-                          value="{{ $user->configuration->convPerUser }}"
+                          value="{{ $user->configuration->conv_per_user }}"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label for="account-code">Código</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="code"
+                          disabled
+                          id="account-code"
+                          placeholder="Seu código"
+                          value="{{ $user->configuration->code }}"
                         />
                       </div>
                     </div>
@@ -287,7 +309,13 @@
                     </div>
 
                     <div class="col-12">
-                      <button type="submit" class="btn btn-primary mt-1 mr-1">Salvar alterações</button>
+                      <button type="submit" class="btn btn-primary mt-1 mr-1">
+                        <i data-feather="save"></i>
+                        Salvar alterações
+                      </button>
+                      <button form="account-refresh-form" type="submit" class="btn btn-warning mt-1 mr-1">
+                        <i data-feather="refresh-ccw"></i> Atualizar código
+                      </button>
                     </div>
                   </div>
                 </form>

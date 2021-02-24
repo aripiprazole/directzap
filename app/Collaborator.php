@@ -15,9 +15,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string name
  * @property string message
  * @property string phone
- * @property int count
  * @property int status
  * @property User user
+ * @property int fill_count
+ * @property int total_count
+ * @property bool active
  */
 class Collaborator extends Model {
   use HasFactory;
@@ -29,7 +31,8 @@ class Collaborator extends Model {
     'name', 'message',
     'email', 'phone',
     'count', 'status',
-    'user'
+    'user', 'fill_count',
+    'total_count'
   ];
 
   public function user(): BelongsTo {
@@ -37,7 +40,7 @@ class Collaborator extends Model {
   }
 
   public function getActiveAttribute(): bool {
-    return $this->status == self::ACTIVE;
+    return $this->status == self::ACTIVE && $this->user->active;
   }
 
   public function invert(): int {

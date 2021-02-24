@@ -9,6 +9,25 @@
       <h4 class="card-title">Colaboradores</h4>
     </div>
     <div class="card-body d-flex flex-column">
+      @if($user->overflow())
+        <div class="alert alert-danger" role="alert">
+          <div class="alert-body">
+            <strong>
+              Você ultrapassou o seu limite de colaboradores de {{ $user->configuration->max_collaborators }}, as
+              conversões não irão contar.
+            </strong>
+          </div>
+        </div>
+      @endif
+
+      @if(!$user->active)
+        <div class="alert alert-danger" role="alert">
+          <div class="alert-body">
+            <strong>Você não está ativado, as conversões não irão contar.</strong>
+          </div>
+        </div>
+      @endif
+
       @if(!is_null($message = session()->get('message')))
         <div class="alert alert-primary" role="alert">
           <div class="alert-body">
@@ -49,7 +68,7 @@
             <tr>
               <th scope="row">{{ $collaborator->id }}</th>
               <td>{{ $collaborator->name }}</td>
-              <td>{{ $collaborator->count }}</td>
+              <td>{{ $collaborator->total_count }}</td>
               <td>
                 @if(!$collaborator->user->active)
                   <div class="badge badge-danger">

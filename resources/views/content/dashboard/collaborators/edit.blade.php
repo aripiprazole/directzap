@@ -51,29 +51,34 @@
         </div>
       </form>
 
-      <div class="d-flex g">
-        <button form="edit-form" type="submit" class="btn btn-primary mr-1">
-          Salvar alterações
-        </button>
-
-        <form method="POST"
-              action="{{ route('dashboard.collaborators.clear', ['collaborator' => $collaborator->id]) }}">
-          @csrf
-
-          <button type="submit" class="btn btn-warning mr-1">
-            Limpar conversões
+        <div class="d-flex g">
+          <button form="edit-form" type="submit" class="btn btn-primary mr-1">
+            <i data-feather="save"></i>
+            Salvar alterações
           </button>
-        </form>
 
-        <form method="POST"
-              action="{{ route('dashboard.collaborators.destroy', ['collaborator' => $collaborator->id]) }}">
-          @csrf
+          <form method="POST"
+                action="{{ route('dashboard.collaborators.clear', ['collaborator' => $collaborator->id]) }}">
+            @csrf
 
-          <button type="submit" class="btn btn-danger mr-1">
-            <i data-feather="trash"></i>
-          </button>
-        </form>
-      </div>
+            <button @if($user->cannot('update', $collaborator)) disabled @endif type="submit"
+                    class="btn btn-warning mr-1">
+              <i data-feather="x-circle"></i>
+
+              Limpar conversões
+            </button>
+          </form>
+
+          <form method="POST"
+                action="{{ route('dashboard.collaborators.destroy', ['collaborator' => $collaborator->id]) }}">
+            @csrf
+
+            <button @if($user->cannot('delete', $collaborator)) disabled @endif type="submit"
+                    class="btn btn-danger mr-1">
+              <i data-feather="trash"></i>
+            </button>
+          </form>
+        </div>
     </div>
   </div>
 @endsection

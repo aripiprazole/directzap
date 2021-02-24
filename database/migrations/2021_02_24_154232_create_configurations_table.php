@@ -14,6 +14,7 @@ class CreateConfigurationsTable extends Migration {
     Schema::create('configurations', function (Blueprint $table) {
       $table->id();
       $table->integer('conv_per_user')->default(4);
+      $table->string('code');
       $table->string('pix')->nullable();
       $table->integer('max_collaborators')->default(8);
       $table->timestamps();

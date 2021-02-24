@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Uuid;
 
 class RegisterController extends Controller {
   /*
@@ -68,12 +69,12 @@ class RegisterController extends Controller {
       'password' => Hash::make($data['password']),
     ]);
 
-    $configuration = new Configuration();
+    $configuration = new Configuration([
+      'code' => Uuid::uuid6()
+    ]);
 
     // setup configuration
-    $user->configuration()->save(
-      $configuration
-    );
+    $user->configuration()->save($configuration);
 
     return $user;
   }

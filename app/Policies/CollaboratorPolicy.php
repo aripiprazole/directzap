@@ -38,8 +38,8 @@ class CollaboratorPolicy {
    * @param User $user
    * @return mixed
    */
-  public function create(User $user) {
-    return $user->active;
+  public function create(User $user): bool {
+    return $user->active && !$user->overflow();
   }
 
   /**
