@@ -5,7 +5,7 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Config;
 
 class Helper {
-  public static function applClasses() {
+  public static function applClasses(): array {
     // default data array
     $DefaultData = [
       'mainLayoutType' => 'vertical',

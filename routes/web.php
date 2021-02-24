@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\LanguageController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,18 +14,38 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Auth::routes();
 Auth::routes();
 
-Route::get('/', 'StaterkitController@home')->name('home');
-Route::get('home', 'StaterkitController@home')->name('home');
-// Route Components
-Route::get('layouts/collapsed-menu', 'StaterkitController@collapsed_menu')->name('collapsed-menu');
-Route::get('layouts/boxed', 'StaterkitController@layout_boxed')->name('layout-boxed');
-Route::get('layouts/without-menu', 'StaterkitController@without_menu')->name('without-menu');
-Route::get('layouts/empty', 'StaterkitController@layout_empty')->name('layout-empty');
-Route::get('layouts/blank', 'StaterkitController@layout_blank')->name('layout-blank');
+Route::middleware('auth:web')->prefix('/dashboard')->name('dashboard.')->group(function () {
+  Route::get('/', 'DashboardController@dashboard')->name('index');
+  Route::get('/settings', 'DashboardController@settings')->name('settings');
 
+  Route::prefix('/users')->name('users.')->group(function () {
+    Route::post('/update/me', 'Dashboard\MeController@update')->name('update.me');
+  });
+
+  Route::prefix('/collaborators')->name('collaborators.')->group(function () {
+    Route::get('/', 'Dashboard\CollaboratorController@index')->name('index');
+    Route::get('/create', 'Dashboard\CollaboratorController@create')->name('create');
+    Route::get('/edit/{collaborator}', 'Dashboard\CollaboratorController@edit')->name('edit');
+
+    Route::middleware('can:create,App\Collaborator')
+      ->post('/store', 'Dashboard\CollaboratorController@store')
+      ->name('store');
+
+    Route::middleware('can:delete,collaborator')
+      ->post('/destroy/{collaborator}', 'Dashboard\CollaboratorController@destroy')
+      ->name('destroy');
+
+    Route::middleware('can:update,collaborator')->group(function () {
+      Route::post('/clear/{collaborator}', 'Dashboard\CollaboratorController@clear')->name('clear');
+      Route::post('/pause/{collaborator}', 'Dashboard\CollaboratorController@pause')->name('pause');
+      Route::post('/update/{collaborator}', 'Dashboard\CollaboratorController@update')->name('update');
+    });
+  });
+});
+
+Route::get('/{name?}', 'ConversionController');
 
 // locale Route
 Route::get('lang/{locale}', [LanguageController::class, 'swap']);

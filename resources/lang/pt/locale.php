@@ -1,7 +1,18 @@
 <?php
 
 return [
-  "Home" => "Casa",
+  "Collaborators" => "Colaboradores",
+  "Show collaborators" => "Seus colaboradores",
+  "Add collaborator" => "Adcionar",
+  "Edit collaborator" => "Editar colaborador :name",
+  "Successfully created collaborator", "Colaborador criado com sucesso",
+  "Successfully clean collaborator", "Colaborador limpo com sucesso",
+  "Successfully updated collaborator", "Colaborador atualizado com sucesso",
+  "Successfully deleted collaborator", "Colaborador :name deletado com sucesso",
+  "Successfully updated me" => "Atualizado com sucesso",
+  "Member" => "Utilizador",
+  "Dashboard" => "Painel",
+  "Home" => "Home",
   "Starter Kit" => "Kit iniciante",
   "Dashboards" => "painel de controle",
   "Analytics" => "Analytics",

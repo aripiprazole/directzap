@@ -48,7 +48,7 @@
         </div>
         @endif
         <p class="card-text mb-2">{{ __('Before proceeding, please check your email for a verification link.') }}</p>
-        <p class="card-text">{{ __('If you did not receive the email') }},
+        <p class="card-text">{{ __('If you did not receive the email') }}
 
           <form class="d-inline" method="POST" action="{{ route('verification.resend') }}">
             @csrf
