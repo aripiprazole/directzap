@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ConfigurationUpdateRequest extends FormRequest {
+class UserUpdateRequest extends FormRequest {
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -21,7 +21,9 @@ class ConfigurationUpdateRequest extends FormRequest {
    */
   public function rules(): array {
     return [
-      'conv-per-user' => 'required|integer|max:255',
+      'name' => 'required|string|max:190',
+      'email' => 'required|string|email|max:190',
+      'avatar' => 'mimes:jpg,gif,png|max:800',
     ];
   }
 }

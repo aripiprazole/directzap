@@ -13,7 +13,18 @@ class CreateActivationsTable extends Migration {
   public function up() {
     Schema::create('activations', function (Blueprint $table) {
       $table->id();
+      $table->string('code');
+      $table->enum('type', ['automatic', 'manual', 'infinite'])->default('manual');
+      $table->boolean('used')->default(false);
+      $table->boolean('expired')->default(false);
       $table->timestamps();
+
+      $table->unsignedBigInteger('user_id')->nullable();
+
+      $table
+        ->foreign('user_id')
+        ->references('id')
+        ->on('users');
     });
   }
 

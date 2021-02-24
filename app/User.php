@@ -62,6 +62,10 @@ class User extends Authenticatable {
     return $this->hasOne(Configuration::class);
   }
 
+  public function activations(): HasMany {
+    return $this->hasMany(Activation::class);
+  }
+
   public function collaborators(): HasMany {
     return $this->hasMany(Collaborator::class);
   }
@@ -71,15 +75,32 @@ class User extends Authenticatable {
   }
 
   public function getRoleAttribute(): string {
-    return 'Member';
+    return $this->hasRole('Administrator') ? 'Administrator' : 'Member';
   }
 
-  public function getImageAttribute(): string {
-    return route('dashboard.users.avatar.me', ['user' => $this->id]);
+  public function getAvatarAttribute(): string {
+    return route('dashboard.users.avatar', ['user' => $this->id]);
   }
 
   public function getActiveAttribute(): bool {
-    return true;
+    if($this->hasRole('Administrator')) {
+      return true;
+    }
+
+    /** @var Activation $activation */
+    $activation = $this->activations()
+      ->where('used', 1)
+      ->whereRaw("
+        (DATE_ADD(created_at, INTERVAL 30 DAY) > NOW() AND type = 'manual')
+          OR (expired = 0 AND type = 'automatic')
+          OR (expired = 0 AND type = 'infinite')")
+      ->first();
+
+    if ($activation == null) {
+      return false;
+    }
+
+    return $activation != null;
   }
 
   public function hasCollaborators(): bool {

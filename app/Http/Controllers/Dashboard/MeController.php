@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MeUpdateRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\User;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,11 @@ class MeController extends Controller {
     $this->storage = $filesystem->disk($filesystem->getDefaultDriver());
   }
 
+  /**
+   * @param MeUpdateRequest $request
+   * @return RedirectResponse
+   * @throws FileNotFoundException
+   */
   public function update(MeUpdateRequest $request): RedirectResponse {
     /** @var User $user */
     $user = $request->user();

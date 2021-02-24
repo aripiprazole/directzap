@@ -23,6 +23,13 @@
           "slug": "collaborators/new"
         }
       ]
+    },
+    {
+      "name": "Users",
+      "icon": "users",
+      "role": "Administrator",
+      "url": "dashboard/users",
+      "slug": "users"
     }
   ]
 }

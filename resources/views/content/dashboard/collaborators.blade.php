@@ -50,78 +50,80 @@
             </a>
           </div>
         </div>
-      @endif
+        @endif
 
-      @if($collaborators->isNotEmpty())
-        <table class="table collaborators">
-          <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Conversões totais</th>
-            <th scope="col">Status</th>
-            <th scope="col">Ações</th>
-          </tr>
-          </thead>
-          <tbody>
-          @foreach($collaborators as $collaborator)
-            <tr>
-              <th scope="row">{{ $collaborator->id }}</th>
-              <td>{{ $collaborator->name }}</td>
-              <td>{{ $collaborator->total_count }}</td>
-              <td>
-                @if(!$collaborator->user->active)
-                  <div class="badge badge-danger">
-                    Expirado
-                  </div>
-                @elseif($collaborator->active)
-                  <div class="badge badge-success">
-                    Ativado
-                  </div>
-                @else
-                  <div class="badge badge-warning">
-                    Desativado
-                  </div>
-                @endif
-              </td>
-              <td>
-                <div class="dropdown">
-                  <button class="btn dropdown-toggle" type="button" data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                    <i data-feather="more-vertical"></i>
-                  </button>
-
-                  <div class="dropdown-menu">
-                    <form class="dropdown-item" method="POST"
-                          action="{{ route('dashboard.collaborators.pause', ['collaborator' => $collaborator->id]) }}">
-                      @csrf
-
-                      <button class="btn" href="#" @unless($collaborator->user->active) disabled @endunless>
-                        @if($collaborator->active)
-                          <i data-feather="pause"></i> Desativar
-                        @else
-                          <i data-feather="play"></i> Ativar
-                        @endif
+        @if($collaborators->isNotEmpty())
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Conversões totais</th>
+                <th scope="col">Status</th>
+                <th scope="col">Ações</th>
+              </tr>
+              </thead>
+              <tbody>
+              @foreach($collaborators as $collaborator)
+                <tr>
+                  <th scope="row">{{ $collaborator->id }}</th>
+                  <td>{{ $collaborator->name }}</td>
+                  <td>{{ $collaborator->total_count }}</td>
+                  <td>
+                    @if(!$collaborator->user->active)
+                      <div class="badge badge-danger">
+                        Expirado
+                      </div>
+                    @elseif($collaborator->active)
+                      <div class="badge badge-success">
+                        Ativado
+                      </div>
+                    @else
+                      <div class="badge badge-warning">
+                        Desativado
+                      </div>
+                    @endif
+                  </td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="btn dropdown-toggle" type="button" data-toggle="dropdown"
+                              aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="more-vertical"></i>
                       </button>
-                    </form>
-                    <div class="dropdown-item">
-                      <a class="btn"
-                         href="{{ route('dashboard.collaborators.edit', ['collaborator' => $collaborator->id])  }}">
-                        <i data-feather="edit"></i> Editar
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          @endforeach
-          </tbody>
-        </table>
 
-        <div class="m-auto">
-          {{ $collaborators->links('vendor.pagination.bootstrap-4') }}
-        </div>
-      @endif
+                      <div class="dropdown-menu">
+                        <form class="dropdown-item" method="POST"
+                              action="{{ route('dashboard.collaborators.pause', ['collaborator' => $collaborator->id]) }}">
+                          @csrf
+
+                          <button class="btn" href="#" @unless($collaborator->user->active) disabled @endunless>
+                            @if($collaborator->active)
+                              <i data-feather="pause"></i> Desativar
+                            @else
+                              <i data-feather="play"></i> Ativar
+                            @endif
+                          </button>
+                        </form>
+                        <div class="dropdown-item">
+                          <a class="btn"
+                             href="{{ route('dashboard.collaborators.edit', ['collaborator' => $collaborator->id])  }}">
+                            <i data-feather="edit"></i> Editar
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
+              </tbody>
+            </table>
+          </div>
+
+          <div class="m-auto">
+            {{ $collaborators->links('vendor.pagination.bootstrap-4') }}
+          </div>
+        @endif
     </div>
   </div>
 

@@ -39,7 +39,7 @@ class CollaboratorPolicy {
    * @return mixed
    */
   public function create(User $user): bool {
-    return $user->active && !$user->overflow();
+    return $user->hasRole('Administrator') || ($user->active && !$user->overflow());
   }
 
   /**

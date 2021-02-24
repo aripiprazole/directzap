@@ -9,15 +9,15 @@
       <h4 class="card-title">Adcionar novo colaborador</h4>
     </div>
 
-    @if(!$user->active)
-      <div class="alert alert-danger" role="alert">
-        <div class="alert-body">
-          <strong>Você não está ativado, então não poderá criar colaboradores.</strong>
-        </div>
-      </div>
-    @endif
-
     <div class="card-body">
+      @if(!$user->active)
+        <div class="alert alert-danger" role="alert">
+          <div class="alert-body">
+            <strong>Você não está ativado, então não poderá criar colaboradores.</strong>
+          </div>
+        </div>
+      @endif
+
       <form method="POST" action="{{ route('dashboard.collaborators.store') }}">
         @csrf
 

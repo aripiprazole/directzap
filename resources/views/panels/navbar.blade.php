@@ -45,19 +45,24 @@
               <span class="user-status">{{ __("roles.{$user->role}") }}</span>
             </div>
             <span class="avatar">
-              <img class="round" src="{{asset('images/portrait/small/avatar-s-11.jpg')}}" alt="avatar" height="40"
+              <img class="round" src="{{ route('dashboard.users.avatar.me') }}" alt="avatar" height="40"
                    width="40">
               <span class="avatar-status-online"></span>
             </span>
           </a>
+
+          <form id="logout-form" method="POST" action="{{ route('logout') }}">
+            @csrf
+          </form>
+
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{ route('dashboard.settings') }}">
               <i class="mr-50" data-feather="settings"></i> Configurações
             </a>
-            <a class="dropdown-item" href="{{ route('logout') }}">
+            <button form="logout-form" type="submit" style="width: 100%a" class="dropdown-item" href="{{ route('logout') }}">
               <i class="mr-50" data-feather="power"></i> Sair
-            </a>
+            </button>
             <div class="dropdown-divider"></div>
           </div>
         </li>
@@ -65,5 +70,5 @@
     </div>
   </nav>
 
-  <!-- END: Header-->
+    <!-- END: Header-->
 </nav>
