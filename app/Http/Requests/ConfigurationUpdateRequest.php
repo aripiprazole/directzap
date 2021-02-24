@@ -21,7 +21,8 @@ class ConfigurationUpdateRequest extends FormRequest {
    */
   public function rules(): array {
     return [
-      //
+      'conv-per-user' => 'required|integer|max:255',
+      'pix' => 'string|max:190'
     ];
   }
 }

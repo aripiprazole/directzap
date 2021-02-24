@@ -21,7 +21,9 @@ class MeUpdateRequest extends FormRequest {
    */
   public function rules(): array {
     return [
-      //
+      'name' => 'required|string|max:190',
+      'email' => 'required|string|email|max:190',
+      'avatar' => 'mimes:jpg,gif,png|max:800'
     ];
   }
 }

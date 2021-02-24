@@ -110,7 +110,7 @@
                   <div class="media">
                     <a href="javascript:void(0);" class="mr-25">
                       <img
-                        src="{{$user->image}}"
+                        src="{{ route('dashboard.users.avatar.me') }}"
                         id="account-upload-img"
                         class="rounded mr-50"
                         alt="profile image"
@@ -134,7 +134,7 @@
                         <label for="account-name">Nome</label>
                         <input
                           type="text"
-                          class="form-control"
+                          class="form-control @error('name') is-invalid @enderror"
                           id="account-name"
                           name="name"
                           placeholder="Nome"
@@ -152,7 +152,7 @@
                         <label for="account-surname">Sobrenome</label>
                         <input
                           type="text"
-                          class="form-control"
+                          class="form-control @error('surname') is-invalid @enderror"
                           id="account-surname"
                           name="surname"
                           placeholder="Sobrenome"
@@ -170,7 +170,7 @@
                         <label for="account-email">Email</label>
                         <input
                           type="email"
-                          class="form-control"
+                          class="form-control @error('email') is-invalid @enderror"
                           id="account-email"
                           name="email"
                           placeholder="Email"
@@ -215,7 +215,7 @@
                         <div class="input-group form-password-toggle input-group-merge">
                           <input
                             type="password"
-                            class="form-control"
+                            class="form-control @error('password') is-invalid @enderror"
                             id="account-old-password"
                             name="password"
                             placeholder="Senha antiga"
@@ -242,7 +242,7 @@
                           <input
                             type="password"
                             id="account-new-password"
-                            name="new-password"
+                            name="new-password  @error('new-password') is-invalid @enderror"
                             class="form-control"
                             placeholder="Senha nova"
                           />
@@ -267,7 +267,7 @@
                             type="password"
                             class="form-control"
                             id="account-retype-new-password"
-                            name="confirm-new-password"
+                            name="confirm-new-password @error('confirm-new-password') is-invalid @enderror"
                             placeholder="Senha nova"
                           />
                           <div class="input-group-append">
@@ -317,12 +317,17 @@
                         <input
                           type="number"
                           min="1"
-                          class="form-control"
+                          class="form-control @error('conv-per-user') is-invalid @enderror"
                           name="conv-per-user"
                           id="account-conv-per-user"
                           placeholder="Conversões por usuário"
                           value="{{ $user->configuration->conv_per_user }}"
                         />
+                        @error('conv-per-user')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-12 col-sm-6">
@@ -344,12 +349,17 @@
                         <label for="account-pix">PIX</label>
                         <input
                           type="text"
-                          class="form-control"
+                          class="form-control @error('pix') is-invalid @enderror"
                           name="pix"
                           id="account-pix"
                           placeholder="Seu pix"
                           value="{{ $user->configuration->pix }}"
                         />
+                        @error('pix')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
 

@@ -21,7 +21,9 @@ class UpdatePasswordRequest extends FormRequest {
    */
   public function rules(): array {
     return [
-      //
+      'password' => 'required|string|max:190',
+      'new-password' => 'required|string|max:190',
+      'confirm-new-password' => 'required|string|max:190|same:new-password',
     ];
   }
 }

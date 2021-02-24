@@ -21,10 +21,10 @@ class CollaboratorUpdateRequest extends FormRequest {
    */
   public function rules(): array {
     return [
-      'name' => 'string:255',
-      'email' => 'string:255',
-      'phone' => 'string:255',
-      'message' => 'string:255'
+      'name' => 'required|string|max:190',
+      'email' => 'required|string|email|max:190',
+      'phone' => 'required|string|max:190',
+      'message' => 'required|string|max:190'
     ];
   }
 }

@@ -10,7 +10,6 @@ use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class MeController extends Controller {
@@ -24,9 +23,7 @@ class MeController extends Controller {
     /** @var User $user */
     $user = $request->user();
 
-    $avatar = $request->file('avatar');
-
-    if(!is_null($avatar)) {
+    if(!is_null($avatar = $request->file('avatar'))) {
       $this->storage->put("avatars/{$user->id}", $avatar->get());
     }
 
@@ -49,18 +46,12 @@ class MeController extends Controller {
     return response()->file(storage_path("app/$location"));
   }
 
-  public function updateAvatar(Request $request): RedirectResponse {
-    $this->storage->put("avatars/{$request->user()->id}", $request->file('avatar'));
-
-    return back()->with('message', __('locale.Successfully updated me'));
-  }
-
   public function updatePassword(UpdatePasswordRequest $request): RedirectResponse {
     /** @var User $user */
     $user = $request->user();
 
     if (!Hash::check($request->input('password'), $user->password)) {
-      return back()->with('error', __('passwords.invalid'));
+      return back()->with('error', __('auth.failed'));
     }
 
     $user->update([
