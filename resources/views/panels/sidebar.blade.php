@@ -10,7 +10,7 @@
         <a class="navbar-brand" href="{{url('/')}}">
           <span class="brand-logo">
 
-            <img src="images/logo/favicon.ico" alt="Logo">
+            <img src="{{ asset('images/logo/favicon.ico') }}" alt="Logo">
 
             </span>
           <h2 class="brand-text">{{ config('app.name') }}</h2>

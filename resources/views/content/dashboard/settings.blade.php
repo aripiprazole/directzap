@@ -70,6 +70,18 @@
           <div class="card-body">
             <div class="tab-content">
               <!-- general tab -->
+              @if(!is_null($message = session()->get('error')))
+                <div class="alert alert-danger" role="alert">
+                  <div class="alert-body">
+                    {{ $message }}
+
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              @endif
+
               @if(!is_null($message = session()->get('message')))
                 <div class="alert alert-primary" role="alert">
                   <div class="alert-body">
@@ -90,16 +102,15 @@
                 aria-expanded="true"
               >
                 <!-- form -->
-                <form class="validate-form mt-2" id="account-form" method="POST"
-                      action="{{ route('dashboard.users.update.me') }}">
-
+                <form class="mt-2" method="POST"
+                      action="{{ route('dashboard.users.update.me') }}" enctype="multipart/form-data">
                 @csrf
 
                 <!-- header media -->
                   <div class="media">
                     <a href="javascript:void(0);" class="mr-25">
                       <img
-                        src="{{asset('images/portrait/small/avatar-s-11.jpg')}}"
+                        src="{{$user->image}}"
                         id="account-upload-img"
                         class="rounded mr-50"
                         alt="profile image"
@@ -110,7 +121,7 @@
                     <!-- upload and reset button -->
                     <div class="media-body mt-75 ml-1">
                       <label for="account-upload" class="btn btn-sm btn-primary mb-75 mr-75">Fazer upload</label>
-                      <input type="file" id="account-upload" hidden accept="image/*"/>
+                      <input type="file" id="account-upload" name="avatar" hidden accept="image/*"/>
                       <p>Permitido JPG, GIF or PNG. Tamanho máximo de 800kB</p>
                     </div>
                     <!--/ upload and reset button -->
@@ -129,6 +140,11 @@
                           placeholder="Nome"
                           value="{{ $user->name }}"
                         />
+                        @error('name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-12 col-sm-6">
@@ -142,6 +158,11 @@
                           placeholder="Sobrenome"
                           value="{{ $user->surname }}"
                         />
+                        @error('surname')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-12 col-sm-6">
@@ -155,11 +176,16 @@
                           placeholder="Email"
                           value="{{ $user->email }}"
                         />
+                        @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
 
                     <div class="col-12">
-                      <button type="submit" form="account-form" class="btn btn-primary mt-2 mr-1">
+                      <button type="submit" class="btn btn-primary mt-2 mr-1">
                         <i data-feather="save"></i>
                         Salvar alterações
                       </button>
@@ -179,7 +205,9 @@
                 aria-expanded="false"
               >
                 <!-- form -->
-                <form class="validate-form">
+                <form method="POST" action="{{ route('dashboard.users.update.me.password') }}">
+                  @csrf
+
                   <div class="row">
                     <div class="col-12 col-sm-6">
                       <div class="form-group">
@@ -198,6 +226,11 @@
                             </div>
                           </div>
                         </div>
+                        @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
                   </div>
@@ -219,6 +252,11 @@
                             </div>
                           </div>
                         </div>
+                        @error('new-password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-12 col-sm-6">
@@ -236,6 +274,11 @@
                             <div class="input-group-text cursor-pointer"><i data-feather="eye"></i></div>
                           </div>
                         </div>
+                        @error('confirm-new-password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-12">
@@ -264,7 +307,9 @@
                 </form>
 
                 <!-- form -->
-                <form class="validate-form" method="POST" action="{{ route('dashboard.configurations.update.me') }}">
+                <form method="POST" action="{{ route('dashboard.configurations.update.me') }}">
+                  @csrf
+
                   <div class="row">
                     <div class="col-12 col-sm-6">
                       <div class="form-group">

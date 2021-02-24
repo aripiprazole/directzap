@@ -14,7 +14,7 @@
       <div class="card mb-0">
         <div class="card-body">
           <a href="javascript:void(0);" class="brand-logo">
-            <img src="{{asset('images/logo/logo.png')}}" class="direct-zap-logo"  alt="Logo">
+            <img src="{{ asset('images/logo/logo.png') }}" class="direct-zap-logo"  alt="Logo">
           </a>
 
           <h4 class="card-title mb-1">A aventura começa aqui 🚀</h4>
@@ -39,8 +39,8 @@
               <label for="register-surname" class="form-label">Sobrenome</label>
               <input type="text" class="form-control @error('name') is-invalid @enderror" id="register-username"
                      name="surname" placeholder="Jhon" aria-describedby="register-surname" tabindex="1" autofocus
-                     value="{{ old('name') }}"/>
-              @error('name')
+                     value="{{ old('surname') }}"/>
+              @error('surname')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
               </span>
@@ -52,7 +52,7 @@
               <input type="text" class="form-control @error('email') is-invalid @enderror" id="register-email"
                      name="email" placeholder="john@example.com" aria-describedby="register-email" tabindex="2"
                      value="{{ old('email') }}"/>
-              @error('name')
+              @error('email')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
               </span>

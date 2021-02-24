@@ -30,9 +30,9 @@ class Configuration extends Model {
     return $this->belongsTo(User::class);
   }
 
-  public static function findByCode($code): ?Configuration {
+  public static function findByCode($code): Configuration {
     /** @var Configuration $configuration */
-    $configuration = self::query()->where('code', $code)->first();
+    $configuration = self::query()->where('code', $code)->firstOrFail();
 
     return $configuration;
   }

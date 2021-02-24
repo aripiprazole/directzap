@@ -60,7 +60,7 @@ $(function () {
                 type: 'img'
               },
               {
-                text: 'avatar.png',
+                text: 'default.png',
                 type: 'img'
               }
             ]
@@ -150,7 +150,7 @@ $(function () {
                 type: 'img'
               },
               {
-                text: 'avatar.png',
+                text: 'default.png',
                 type: 'img'
               }
             ]
@@ -240,7 +240,7 @@ $(function () {
                 type: 'img'
               },
               {
-                text: 'avatar.png',
+                text: 'default.png',
                 type: 'img'
               }
             ]
@@ -329,7 +329,7 @@ $(function () {
                 type: 'img'
               },
               {
-                text: 'avatar.png',
+                text: 'default.png',
                 type: 'img'
               }
             ]

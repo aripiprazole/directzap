@@ -23,6 +23,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int totalCount
  * @property int fillCount
  * @property bool active
+ * @property string image
  * @property Configuration configuration
  */
 class User extends Authenticatable {
@@ -71,6 +72,10 @@ class User extends Authenticatable {
 
   public function getRoleAttribute(): string {
     return 'Member';
+  }
+
+  public function getImageAttribute(): string {
+    return route('dashboard.users.avatar.me', ['user' => $this->id]);
   }
 
   public function getActiveAttribute(): bool {

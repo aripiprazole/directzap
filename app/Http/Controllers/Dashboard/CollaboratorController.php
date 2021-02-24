@@ -31,8 +31,7 @@ class CollaboratorController extends Controller {
       'name', 'email', 'phone', 'message'
     ]));
 
-    return back()
-      ->with('message', __('locale.Successfully updated collaborator'));
+    return back()->with('message', __('locale.Successfully updated collaborator'));
   }
 
   public function edit(Request $request, Collaborator $collaborator) {

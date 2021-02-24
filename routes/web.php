@@ -21,7 +21,9 @@ Route::middleware('auth:web')->prefix('/dashboard')->name('dashboard.')->group(f
   Route::get('/settings', 'DashboardController@settings')->name('settings');
 
   Route::prefix('/users')->name('users.')->group(function () {
+    Route::get('/avatar/me', 'Dashboard\MeController@avatar')->name('avatar.me');
     Route::post('/update/me', 'Dashboard\MeController@update')->name('update.me');
+    Route::post('/update/me/password', 'Dashboard\MeController@updatePassword')->name('update.me.password');
   });
 
   Route::prefix('/configurations')->name('configurations.')->group(function () {
