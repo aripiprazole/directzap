@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::any('/braip', 'ActivationController@webhook');
-Route::any('/api/v1/braip', 'ActivationController@webhook');
+Route::any('/v1/braip', 'ActivationController@webhook');
+
+Route::any('/v1/pixels/{name}', function (Request $request) {
+  $code = $request->query('code');
+
+  return App\Configuration::findByCode($code)->pix;
+});

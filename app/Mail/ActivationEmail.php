@@ -27,6 +27,6 @@ class ActivationEmail extends Mailable {
    * @return $this
    */
   public function build(): ActivationEmail {
-    return $this->view('view.name');
+    return $this->view('mail.activation');
   }
 }

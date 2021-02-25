@@ -24,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int fillCount
  * @property bool active
  * @property string image
+ * @property string role
  * @property Configuration configuration
  */
 class User extends Authenticatable {
@@ -39,7 +40,8 @@ class User extends Authenticatable {
     'surname',
     'email',
     'password',
-    'status'
+    'status',
+    'role'
   ];
 
   /**
@@ -80,6 +82,10 @@ class User extends Authenticatable {
 
   public function getAvatarAttribute(): string {
     return route('dashboard.users.avatar', ['user' => $this->id]);
+  }
+
+  public function hasRole($roles, string $guard = null): bool {
+    return $this->role === $roles;
   }
 
   public function getActiveAttribute(): bool {
