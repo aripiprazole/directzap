@@ -232,6 +232,10 @@ return [
 
   'facebook' => [
     'url' => 'https://pageslink.site'
+  ],
+
+  'braip' => [
+    'unique_key' => env('BRAIP_UNIQUE_KEY', '')
   ]
 
 ];
