@@ -35,7 +35,14 @@ class DashboardController extends Controller {
 
     return view('content.dashboard', [
       'breadcrumbs' => $breadcrumbs,
-      'user' => $request->user()
+      'user' => new User([
+        'name' => 'batata',
+        'surname' => 'doce',
+        'email' => 'batata@doce.com',
+        'password'=> ' cu',
+        'status' => 0,
+        'role' => 0
+      ])
     ]);
   }
 }

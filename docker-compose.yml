@@ -8,3 +8,40 @@ services:
       - 3306:3306
     env_file:
       - mysql/.env
+
+  webserver:
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - database
+      - app
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+    env_file:
+      - .env
+    networks:
+      - directzap
+
+  app:
+    build: .
+    image: digitalocean.com/php
+    restart: unless-stopped
+    tty: true
+    env_file:
+      - .env
+    working_dir: /var/www
+    depends_on:
+      - database
+    volumes:
+      - .:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - directzap
+
+networks:
+  directzap:

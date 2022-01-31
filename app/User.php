@@ -85,7 +85,7 @@ class User extends Authenticatable {
   }
 
   public function hasRole($roles, string $guard = null): bool {
-    return $this->role === $roles;
+    return $this->getRoleAttribute() === $roles;
   }
 
   public function getActiveAttribute(): bool {

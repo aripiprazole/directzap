@@ -3,7 +3,6 @@
 @endisset
 
 <!DOCTYPE html>
-{{-- {!! Helper::applClasses() !!} --}}
 @php
 $configData = App\Helpers\Helper::applClasses();
 @endphp

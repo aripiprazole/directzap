@@ -16,11 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
+Route::get('/', 'DashboardController@dashboard')->name('index');
+
 Route::middleware('auth:web')->prefix('/dashboard')->name('dashboard.')->group(function () {
   Route::get('/activate', 'DashboardController@activate');
   Route::post('/activate', 'ActivationController@self')->name('activate');
   Route::get('/settings', 'DashboardController@settings')->name('settings');
-  Route::get('/', 'DashboardController@dashboard')->name('index');
 
   Route::prefix('/users')->name('users.')->group(function () {
     Route::get('/avatar/me', 'Dashboard\MeController@avatar')->name('avatar.me');

@@ -69,12 +69,10 @@ class RegisterController extends Controller {
       'password' => Hash::make($data['password']),
     ]);
 
-    $configuration = new Configuration([
-      'code' => Uuid::uuid6()
-    ]);
-
     // setup configuration
-    $user->configuration()->save($configuration);
+    $user->configuration()->save(new Configuration([
+      'code' => Uuid::uuid6()
+    ]));
 
     return $user;
   }
